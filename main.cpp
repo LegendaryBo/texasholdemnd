@@ -1,12 +1,22 @@
-#include <QApplication>
-#include <QWidget>
-#include "table.h"
-using namespace std;
+#include <QtGui/QApplication>
+#include <QLabel>
+#include <QString>
+#include <iomanip>
+#include <iostream>
+#include <QPushButton>
+//import QtQuick 1.0
 
-int main(int argc, char *argv[ ]) {
-        QApplication app(argc, argv);
+#include "table.h" //includes table header file
+#include "card.h" //includes cards header file
 
-        Table table1;
-        table1.setVisible(TRUE);
-        return app.exec();
+int main(int argc, char *argv[])
+{
+  QApplication app(argc, argv); //starts a new QApp
+
+  //Creates a table and runs paintevent
+  Table table1(0, "aceSpades.png");
+  table1.show();
+  return app.exec();
+
 }
+
