@@ -1,59 +1,65 @@
-#ifndef WINDOW_H
-#define WINDOW_H
-#include <QMainWindow>
+#include <QtGui>
+#include <QAction>
 #include <QGraphicsScene>
 #include <QPushButton>
-#include <QLineEdit>
-#include <QFormLayout>
+#include <QTextEdit>
+#include <QHBoxLayout>
+#include "window.h"
 
-class QAction;
-class QListWidget;
-class QMenu;
-class QLineEdit;
-class QPushButton;
-class QFormLayout;
-class QGraphicsView;
-class QWidget;
-
-class Window : public QMainWindow
+Window::Window()
 {
-  Q_OBJECT
+  setWindowTitle(tr("Dock Widgets"));
+  resize(1258, 500);
+  QPixmap pixMapTable("holdEmTable.png");
+  graphicsScene = new QGraphicsScene();
+  graphicsScene -> addPixmap(pixMapTable);
+
+  graphicsView = new QGraphicsView(graphicsScene);
+  setCentralWidget(graphicsView);
+  
+  createButtons();
+  createLayout();
+  createDockWindows();
+  //createActions();
+}
+
+
+void Window::createButtons()
+{
+  betButton = new QPushButton("Bet");
+  lineEditBet = new QLineEdit;
+  raiseButton = new QPushButton("Raise");
+  lineEditRaise = new QLineEdit;
+  callButton = new QPushButton("Call");
+  lineEditCall = new QLineEdit;
+  foldButton = new QPushButton("Fold");
+  stayButton = new QPushButton("Stay");
+}
+
+void Window::createLayout()
+{
+  layout = new QFormLayout;
+  layout->addRow(betButton, lineEditBet);
+  layout->addRow(raiseButton, lineEditRaise);
+  layout->addRow(callButton, lineEditCall);
+  layout->addRow(foldButton);
+  layout->addRow(stayButton);
+}
+  
+//void Window::createActions()
+//{
+// betButtonAct = new QAction("Call", this);
+// connect(betButtonAct, SIGNAL(triggered()), this, SLOT(bet()));
+//}
+
+void Window::createDockWindows()
+{
     
-    public:
-  Window();
+  QWidget *wi = new QWidget;
+  wi->setLayout(layout);
   
-private slots:
-  
-  //void bet();
-  
- private:
-  
-  
-  //Background
-  //QGraphicsScene *graphicsScene;
-  //QGraphicsView *graphicsView;
-  
-  void createActions();
-  void createButtons();                
-  void createDockWindows();
-  void createLayout();
-  
-
-  //QPushButton *betButton;
-
-  QGraphicsView *graphicsView;
-  QPushButton *button1;
-  QPushButton *button2;
-  QPushButton *button3;
-  
-  QLineEdit *lineEdit1;
-  QLineEdit *lineEdit2;
-  QLineEdit *lineEdit3;
-
-  QAction *betButtonAct;
-
-  QFormLayout *layout;
-};
-
-#endif
+  QDockWidget *dw = new QDockWidget(tr("Buttons"), this);
+  dw->setWidget(wi);
+  addDockWidget(Qt::LeftDockWidgetArea, dw);
+}
 
