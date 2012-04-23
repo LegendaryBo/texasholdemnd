@@ -10,9 +10,9 @@ Window::Window()
 {
   setWindowTitle(tr("Dock Widgets"));
   resize(1258, 500);
-  QPixmap pixMapTable("holdEmTable.png");
-  graphicsScene = new QGraphicsScene();
-  graphicsScene -> addPixmap(pixMapTable);
+
+  scene = new DiagramScene(this);
+  graphicsScene = scene->getScene();
 
   graphicsView = new QGraphicsView(graphicsScene);
   setCentralWidget(graphicsView);
@@ -20,7 +20,7 @@ Window::Window()
   createButtons();
   createLayout();
   createDockWindows();
-  //createActions();
+  createActions();
 }
 
 
@@ -33,7 +33,7 @@ void Window::createButtons()
   callButton = new QPushButton("Call");
   lineEditCall = new QLineEdit;
   foldButton = new QPushButton("Fold");
-  stayButton = new QPushButton("Stay");
+  checkButton = new QPushButton("Check");
 }
 
 void Window::createLayout()
@@ -43,14 +43,8 @@ void Window::createLayout()
   layout->addRow(raiseButton, lineEditRaise);
   layout->addRow(callButton, lineEditCall);
   layout->addRow(foldButton);
-  layout->addRow(stayButton);
+  layout->addRow(checkButton);
 }
-  
-//void Window::createActions()
-//{
-// betButtonAct = new QAction("Call", this);
-// connect(betButtonAct, SIGNAL(triggered()), this, SLOT(bet()));
-//}
 
 void Window::createDockWindows()
 {
@@ -61,5 +55,48 @@ void Window::createDockWindows()
   QDockWidget *dw = new QDockWidget(tr("Buttons"), this);
   dw->setWidget(wi);
   addDockWidget(Qt::LeftDockWidgetArea, dw);
+}
+
+void Window::createActions()
+{
+  connect(betButton, SIGNAL(clicked()), this, SLOT(bet()));
+  connect(raiseButton, SIGNAL(clicked()), this, SLOT(raise()));
+  connect(callButton, SIGNAL(clicked()), this, SLOT(call()));
+  connect(foldButton, SIGNAL(clicked()), this, SLOT(fold()));
+  connect(checkButton, SIGNAL(clicked()), this, SLOT(check()));
+}
+
+void Window::bet()
+{ 
+  scene->nextState();
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+}
+
+void Window::raise()
+{
+}
+
+void Window::call()
+{
+  scene->nextState();
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+}
+
+void Window::fold()
+{
+  scene->setCaseInt(4);
+  scene->nextState();
+
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+}
+
+void Window::check()
+{
 }
 
