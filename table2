@@ -9,13 +9,12 @@
 Window::Window()
 {
   setWindowTitle(tr("Dock Widgets"));
-  resize(991, 520);
-  //QRectF sourceTable(0, 0, 991, 441);
-  //QPixmap pixMapTable("holdEmTable.png");
-  //graphicsScene = new QGraphicsScene();
-  //graphicsScene -> addPixmap(pixMapTable);
+  resize(1258, 500);
+  QPixmap pixMapTable("holdEmTable.png");
+  graphicsScene = new QGraphicsScene();
+  graphicsScene -> addPixmap(pixMapTable);
 
-  graphicsView = new QGraphicsView();
+  graphicsView = new QGraphicsView(graphicsScene);
   setCentralWidget(graphicsView);
   
   createButtons();
@@ -27,23 +26,24 @@ Window::Window()
 
 void Window::createButtons()
 {
-  //betButton = new QPushButton("Bet");
-  //betButton -> addAction(betButtonAct);
-  
-  button1 = new QPushButton("One");
-  lineEdit1 = new QLineEdit;
-  button2 = new QPushButton("Two");
-  lineEdit2 = new QLineEdit;
-  button3 = new QPushButton("Three");
-  lineEdit3 = new QLineEdit;
+  betButton = new QPushButton("Bet");
+  lineEditBet = new QLineEdit;
+  raiseButton = new QPushButton("Raise");
+  lineEditRaise = new QLineEdit;
+  callButton = new QPushButton("Call");
+  lineEditCall = new QLineEdit;
+  foldButton = new QPushButton("Fold");
+  stayButton = new QPushButton("Stay");
 }
 
 void Window::createLayout()
 {
   layout = new QFormLayout;
-  layout->addRow(button1, lineEdit1);
-  layout->addRow(button2, lineEdit2);
-  layout->addRow(button3, lineEdit3);
+  layout->addRow(betButton, lineEditBet);
+  layout->addRow(raiseButton, lineEditRaise);
+  layout->addRow(callButton, lineEditCall);
+  layout->addRow(foldButton);
+  layout->addRow(stayButton);
 }
   
 //void Window::createActions()
