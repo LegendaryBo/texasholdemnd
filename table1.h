@@ -1,65 +1,74 @@
-#include <QtGui>
-#include <QAction>
+
+#ifndef WINDOW_H
+#define WINDOW_H
+#include <QMainWindow>
 #include <QGraphicsScene>
 #include <QPushButton>
-#include <QTextEdit>
-#include <QHBoxLayout>
-#include "window.h"
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QAction>
+#include "DiagramScene.h"
 
-Window::Window()
+//class DiagramScene;
+
+class QAction;
+class QListWidget;
+class QMenu;
+class QLineEdit;
+class QPushButton;
+class QFormLayout;
+class QGraphicsView;
+class QWidget;
+class QPixmap;
+class QGraphicsScene;
+//class DiagramScene;
+
+class Window : public QMainWindow
 {
-  setWindowTitle(tr("Dock Widgets"));
-  resize(1258, 500);
-  QPixmap pixMapTable("holdEmTable.png");
-  graphicsScene = new QGraphicsScene();
-  graphicsScene -> addPixmap(pixMapTable);
-
-  graphicsView = new QGraphicsView(graphicsScene);
-  setCentralWidget(graphicsView);
-  
-  createButtons();
-  createLayout();
-  createDockWindows();
-  //createActions();
-}
-
-
-void Window::createButtons()
-{
-  betButton = new QPushButton("Bet");
-  lineEditBet = new QLineEdit;
-  raiseButton = new QPushButton("Raise");
-  lineEditRaise = new QLineEdit;
-  callButton = new QPushButton("Call");
-  lineEditCall = new QLineEdit;
-  foldButton = new QPushButton("Fold");
-  stayButton = new QPushButton("Stay");
-}
-
-void Window::createLayout()
-{
-  layout = new QFormLayout;
-  layout->addRow(betButton, lineEditBet);
-  layout->addRow(raiseButton, lineEditRaise);
-  layout->addRow(callButton, lineEditCall);
-  layout->addRow(foldButton);
-  layout->addRow(stayButton);
-}
-  
-//void Window::createActions()
-//{
-// betButtonAct = new QAction("Call", this);
-// connect(betButtonAct, SIGNAL(triggered()), this, SLOT(bet()));
-//}
-
-void Window::createDockWindows()
-{
+  Q_OBJECT
     
-  QWidget *wi = new QWidget;
-  wi->setLayout(layout);
+    public:
+  Window();
   
-  QDockWidget *dw = new QDockWidget(tr("Buttons"), this);
-  dw->setWidget(wi);
-  addDockWidget(Qt::LeftDockWidgetArea, dw);
-}
+  private slots:
+  
+  void bet();
+  void call();
+  void raise();
+  void fold();
+  void check();
+  
+  private:
+  
+  
+  //Background
 
+  DiagramScene *scene;
+  QGraphicsScene *graphicsScene;
+  QGraphicsView *graphicsView;
+  
+  void createActions();
+  void createButtons();                
+  void createDockWindows();
+  void createLayout();
+  
+  QPushButton *betButton;
+  QPushButton *raiseButton;
+  QPushButton *callButton;
+  QPushButton *foldButton;
+  QPushButton *checkButton;
+  
+  QLineEdit *lineEditBet;
+  QLineEdit *lineEditRaise;
+  QLineEdit *lineEditCall;
+
+  QFormLayout *layout;
+
+  QAction *betAction;
+  QAction *callAction;
+  QAction *raiseAction;
+  QAction *foldAction;
+  QAction *checkAction;
+};
+
+#endif
