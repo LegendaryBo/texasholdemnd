@@ -1,0 +1,65 @@
+#include <QtGui>
+#include <QAction>
+#include <QGraphicsScene>
+#include <QPushButton>
+#include <QTextEdit>
+#include <QHBoxLayout>
+#include "window.h"
+
+Window::Window()
+{
+  setWindowTitle(tr("Dock Widgets"));
+  resize(991, 520);
+  //QRectF sourceTable(0, 0, 991, 441);
+  //QPixmap pixMapTable("holdEmTable.png");
+  //graphicsScene = new QGraphicsScene();
+  //graphicsScene -> addPixmap(pixMapTable);
+
+  graphicsView = new QGraphicsView();
+  setCentralWidget(graphicsView);
+  
+  createButtons();
+  createLayout();
+  createDockWindows();
+  //createActions();
+}
+
+
+void Window::createButtons()
+{
+  //betButton = new QPushButton("Bet");
+  //betButton -> addAction(betButtonAct);
+  
+  button1 = new QPushButton("One");
+  lineEdit1 = new QLineEdit;
+  button2 = new QPushButton("Two");
+  lineEdit2 = new QLineEdit;
+  button3 = new QPushButton("Three");
+  lineEdit3 = new QLineEdit;
+}
+
+void Window::createLayout()
+{
+  layout = new QFormLayout;
+  layout->addRow(button1, lineEdit1);
+  layout->addRow(button2, lineEdit2);
+  layout->addRow(button3, lineEdit3);
+}
+  
+//void Window::createActions()
+//{
+// betButtonAct = new QAction("Call", this);
+// connect(betButtonAct, SIGNAL(triggered()), this, SLOT(bet()));
+//}
+
+void Window::createDockWindows()
+{
+    
+  QWidget *wi = new QWidget;
+  wi->setLayout(layout);
+  
+  QDockWidget *dw = new QDockWidget(tr("Buttons"), this);
+  dw->setWidget(wi);
+  addDockWidget(Qt::LeftDockWidgetArea, dw);
+}
+
