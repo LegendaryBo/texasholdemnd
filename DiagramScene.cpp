@@ -8,6 +8,11 @@ DiagramScene::DiagramScene(QObject *parent) : QGraphicsScene(parent)
 {
   caseInt=0;
   drawBackground();
+
+  smallChips=30;
+  smallMediumChips=400;
+  mediumLargeChips=800;
+  largeChips=1200;
 }
 
 void DiagramScene::drawBackground()
@@ -65,6 +70,11 @@ void DiagramScene::clearHand()
   delete item7Ptr;
   delete item8Ptr;
   delete item9Ptr;
+  delete item10Ptr;
+  //delete item11Ptr;
+  delete item12Ptr;
+  delete item13Ptr;
+  delete item14Ptr;
   
   update();
 }
@@ -151,5 +161,149 @@ void DiagramScene::dealRiver(const char *river)
   update();
 }
 
+void DiagramScene:: displayChips(int playerChips, int compChips, int potChips)
+{
+  displayPlayerChips(playerChips);
+  displayCompChips(compChips);
+  displayPot(potChips);
+  
+  update();
+}
+
+void DiagramScene:: displayPlayerChips(int playerChips)
+{
+  if (playerChips<smallChips)
+    {
+      //display small chip size image
+
+      QPixmap pixMap("goldStack5.png");
+      item10Ptr=graphicsScene->addPixmap(pixMap);
+      item10Ptr->setPos(321, 381);
+    }
+  else if (playerChips>=smallChips && playerChips<smallMediumChips)
+    {
+      //display medium size image
+      QPixmap pixMap("goldStack4.png");
+      item10Ptr=graphicsScene->addPixmap(pixMap);
+      item10Ptr->setPos(324, 378);
+    }
+  else if (playerChips>=smallMediumChips && playerChips<mediumLargeChips)
+    {
+
+      QPixmap pixMap("goldStack4.png");
+      item10Ptr=graphicsScene->addPixmap(pixMap);
+      item10Ptr->setPos(324, 378);
+      
+      QPixmap pixMap1("goldStack4.png");
+      item11Ptr=graphicsScene->addPixmap(pixMap1);
+      item11Ptr->setPos(351, 378);
+    }
+  else if (playerChips>=mediumLargeChips && playerChips<largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item10Ptr=graphicsScene->addPixmap(pixMap);
+      item10Ptr->setPos(310, 330);
+    } 
+  else if (playerChips>=largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item10Ptr=graphicsScene->addPixmap(pixMap);
+      item10Ptr->setPos(318, 330);
+
+      QPixmap pixMap1("goldStack1.png");
+      item11Ptr=graphicsScene->addPixmap(pixMap1);
+      item11Ptr->setPos(346, 330);
+    }
+  update();
+}
+
+void DiagramScene:: displayCompChips(int chips)
+{
+  if (chips<smallChips)
+    {
+      //display small chip size image
+      QPixmap pixMap("goldStack5.png");
+      item12Ptr=graphicsScene->addPixmap(pixMap);
+      item12Ptr->setPos(614, 20);
+    }
+  
+  else if (chips>=smallChips && chips<smallMediumChips)
+    {
+      //display medium size image
+      QPixmap pixMap("goldStack4.png");
+      item12Ptr=graphicsScene->addPixmap(pixMap);
+      item12Ptr->setPos(618, 18);
+    }
+  else if (chips>=smallMediumChips && chips<mediumLargeChips)
+    {
+      QPixmap pixMap("goldStack4.png");
+      item12Ptr=graphicsScene->addPixmap(pixMap);
+      item12Ptr->setPos(618, 18);
+      
+      item13Ptr=graphicsScene->addPixmap(pixMap);
+      item13Ptr->setPos(595, 18);  
+    }
+  else if (chips>=mediumLargeChips && chips<largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item12Ptr=graphicsScene->addPixmap(pixMap);
+      item12Ptr->setPos(611, -4);      
+    }
+  else if (chips>=largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item12Ptr=graphicsScene->addPixmap(pixMap);
+      item12Ptr->setPos(611, -4);
+      
+      item13Ptr=graphicsScene->addPixmap(pixMap);
+      item13Ptr->setPos(583, -4);
+    }
+  update();
+}
+
+//115, 165
+void DiagramScene::displayPot(int chips)
+{
+  if (chips<smallChips)
+    {
+      //display small chip size image
+      QPixmap pixMap("goldStack5.png");
+      item14Ptr=graphicsScene->addPixmap(pixMap);
+      item14Ptr->setPos(115, 165);
+    }
+  
+  else if (chips>=smallChips && chips<smallMediumChips)
+    {
+      //display medium size image
+      QPixmap pixMap("goldStack4.png");
+      item14Ptr=graphicsScene->addPixmap(pixMap);
+      item14Ptr->setPos(115, 165);
+    }
+  else if (chips>=smallMediumChips && chips<mediumLargeChips)
+    {
+      QPixmap pixMap("goldStack4.png");
+      item14Ptr=graphicsScene->addPixmap(pixMap);
+      item14Ptr->setPos(115, 165);
+      
+      item15Ptr=graphicsScene->addPixmap(pixMap);
+      item15Ptr->setPos(70, 165);  
+    }
+  else if (chips>=mediumLargeChips && chips<largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item14Ptr=graphicsScene->addPixmap(pixMap);
+      item14Ptr->setPos(115, 165);      
+    }
+  else if (chips>=largeChips)
+    {
+      QPixmap pixMap("goldStack1.png");
+      item14Ptr=graphicsScene->addPixmap(pixMap);
+      item14Ptr->setPos(115, 165);
+      
+      item15Ptr=graphicsScene->addPixmap(pixMap);
+      item15Ptr->setPos(70, 165);
+    }
+  update();
+}
 
 
