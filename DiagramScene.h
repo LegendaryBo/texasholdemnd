@@ -34,6 +34,12 @@ class DiagramScene : public QGraphicsScene
   void dealRiver(const char *);
   void nextState();
   void showComp(const char *, const char *);
+
+  void displayChips(int, int, int);
+  void displayPlayerChips(int);
+  void displayCompChips(int);
+  void displayPot(int);
+  
     
   
   //public slots:
@@ -58,6 +64,19 @@ class DiagramScene : public QGraphicsScene
   QGraphicsPixmapItem *item7Ptr;
   QGraphicsPixmapItem *item8Ptr;
   QGraphicsPixmapItem *item9Ptr;
+  QGraphicsPixmapItem *item10Ptr;
+  QGraphicsPixmapItem *item11Ptr;
+  QGraphicsPixmapItem *item12Ptr;
+  QGraphicsPixmapItem *item13Ptr;
+  QGraphicsPixmapItem *item14Ptr;
+  QGraphicsPixmapItem *item15Ptr;
+  
+
+  int smallChips;
+  int smallMediumChips;
+  int mediumLargeChips;
+  int largeChips;
 };
 
 #endif
+
