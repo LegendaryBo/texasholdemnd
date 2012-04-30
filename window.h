@@ -36,6 +36,8 @@ class Window : public QMainWindow
   void raise();
   void fold();
   void check();
+  void update();
+  void info();
   
   private:
   
@@ -47,7 +49,7 @@ class Window : public QMainWindow
   QGraphicsView *graphicsView;
   
   void createActions();
-  void createButtons();				
+  void createButtons();                         
   void createDockWindows();
   void createLayout();
   
@@ -56,11 +58,13 @@ class Window : public QMainWindow
   QPushButton *callButton;
   QPushButton *foldButton;
   QPushButton *checkButton;
-  
+  QPushButton *updateButton;
+  QPushButton *infoButton;
   QLineEdit *lineEditBet;
   QLineEdit *lineEditRaise;
   QLineEdit *lineEditCall;
-
+  QLineEdit *lineEditUpdate;
+  QLineEdit *lineEditInfo;
   QFormLayout *layout;
 
   QAction *betAction;
@@ -71,3 +75,4 @@ class Window : public QMainWindow
 };
 
 #endif
+
