@@ -38,6 +38,12 @@ void Window::createButtons()
   lineEditCall = new QLineEdit;
   foldButton = new QPushButton("Fold");
   checkButton = new QPushButton("Check");
+
+  updateButton = new QPushButton("Make Computer Action");
+  lineEditUpdate = new QLineEdit;
+
+  infoButton = new QPushButton("Info");
+  lineEditInfo = new QLineEdit;
 }
 
 void Window::createLayout()
@@ -48,6 +54,8 @@ void Window::createLayout()
   layout->addRow(callButton, lineEditCall);
   layout->addRow(foldButton);
   layout->addRow(checkButton);
+  layout->addRow(updateButton, lineEditUpdate);
+  layout->addRow(infoButton, lineEditInfo);
 }
 
 void Window::createDockWindows()
@@ -67,47 +75,108 @@ void Window::createActions()
   connect(callButton, SIGNAL(clicked()), this, SLOT(call()));
   connect(foldButton, SIGNAL(clicked()), this, SLOT(fold()));
   connect(checkButton, SIGNAL(clicked()), this, SLOT(check()));
+  connect(updateButton, SIGNAL(clicked()), this, SLOT(update()));
+  connect(infoButton, SIGNAL(clicked()), this, SLOT(info()));
 }
 
-void Window::bet()
-{ 
-  scene->displayChips(400, 600, lineEditBet->text().toInt());
-  scene->nextState();
+
+void Window::update()
+{
+  char str[9];
+  int x;
+  x=scene->updateCall();
+  x=scene->AIChoice();
+  sprintf(str,"%d", x);
+
+  lineEditUpdate->setText(str);
   scene->update();
   graphicsScene->update();
   graphicsView->update();
+  if(scene->getCaseInt() == 0) scene->nextState ();
+  if(scene->getCaseInt() == 8) { scene->clearHand();scene->update(); scene->nextState(); }
+}
+
+void Window::info()
+{
+   char str[40];
+   int AIbet = scene->Holdem.human.betamount;
+   int AIchips = scene->Holdem.human.chips;
+   int pot = potsize;
+   sprintf(str, "bet=%d,highbet=%d,pot=%d",AIbet,highbet,pot);
+
+  lineEditInfo->setText(str);
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+
+}
+
+
+void Window::bet()
+{ 
+if(scene->Holdem.AI.choice != 'r' && scene->Holdem.AI.choice != 'b') {
+  scene->bet(lineEditBet->text().toInt());
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+  if (scene->getCaseInt() % 2 == 1)
+  scene->nextState();
+}
 }
 
 void Window::raise()
 {
-  scene->displayChips(400, 600, lineEditRaise->text().toInt());
-}
-
-void Window::call()
-{
-  //Figure out how to convert this to an int
-  char str[9];
-  int x=567;
-
-  sprintf(str,"%d", x);
-
-  lineEditCall->setText(str);
-  scene->nextState();
+int raiseamount;    
+if(scene->Holdem.AI.choice == 'r' || scene->Holdem.AI.choice == 'b') {
+raiseamount = lineEditRaise->text().toInt();
+if(raiseamount > highbet) {
+  scene->raise(raiseamount);
   scene->update();
   graphicsScene->update();
   graphicsView->update();
+  if (scene->getCaseInt() % 2 == 1)
+  scene->nextState();
+}// end check if raise is valid
+}// end check if available option
+}// end function
+
+void Window::call()
+{
+int currentcase = scene->getCaseInt();
+if(scene->Holdem.AI.choice == 'r' || scene->Holdem.AI.choice == 'b') {
+  scene->call();
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+  scene->setCaseInt(++currentcase); // maybe don't this
+  scene->nextState();
+}
 }
 
 void Window::fold()
 {
-  scene->setCaseInt(4);
+if(scene->Holdem.AI.choice == 'r' || scene->Holdem.AI.choice == 'b') {
+  scene->fold();
+  scene->update();
+  //graphicsScene->update();
+  //graphicsView->update();
+  scene->Holdem.winner();
+  scene->clearHand();
+  scene->setCaseInt(0);
   scene->nextState();
 
-  scene->update();
-  graphicsScene->update();
-  graphicsView->update();
+}
 }
 
 void Window::check()
 {
+int currentcase = scene->getCaseInt();
+if (scene->Holdem.AI.choice != 'r' && scene->Holdem.AI.choice != 'b') {
+  scene->check();
+  scene->update();
+  graphicsScene->update();
+  graphicsView->update();
+  scene->setCaseInt(++currentcase);
+  scene->nextState();
+}
 }
