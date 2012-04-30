@@ -2,6 +2,7 @@
 #define DIAGRAMSCENE_H
 #include <QGraphicsScene>
 #include <QObject>
+#include "game.h"
 
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
@@ -13,6 +14,7 @@ class QGraphicsTextItem;
 class QColor;
 class QPixMap;
 class QGraphicsPixmapItem;
+
 
 class DiagramScene : public QGraphicsScene
 {
@@ -26,6 +28,7 @@ class DiagramScene : public QGraphicsScene
   void clearHand();
   void drawBackground();
   void setCaseInt(int);
+  int getCaseInt();
   void dealInitialHand(const char *, const char *);
   void dealPlayer(const char *, const char *);
   void dealComp();
@@ -35,41 +38,47 @@ class DiagramScene : public QGraphicsScene
   void nextState();
   void showComp(const char *, const char *);
 
-  void displayChips(int, int, int);
-  void displayPlayerChips(int);
-  void displayCompChips(int);
-  void displayPot(int);
+  void displayChips();
+  void displayPlayerChips();
+  void displayCompChips();
+  void displayPot();
+
+  void fold();
+  void bet(int);
+  void raise(int);
+  void call();
+  void check();
   
-    
+  int updateCall();
+  int AIChoice();
   
   //public slots:
   
   //signals:
   
   //protected:
-    
+  game Holdem; // move back to private    
   private:
-  
+
   int caseInt;
   QGraphicsScene *graphicsScene;
   
   QPixmap *pixMap;
   
-  QGraphicsPixmapItem *item1Ptr;
-  QGraphicsPixmapItem *item2Ptr; 
-  QGraphicsPixmapItem *item3Ptr; 
-  QGraphicsPixmapItem *item4Ptr;
-  QGraphicsPixmapItem *item5Ptr;
-  QGraphicsPixmapItem *item6Ptr;
-  QGraphicsPixmapItem *item7Ptr;
-  QGraphicsPixmapItem *item8Ptr;
-  QGraphicsPixmapItem *item9Ptr;
-  QGraphicsPixmapItem *item10Ptr;
-  QGraphicsPixmapItem *item11Ptr;
-  QGraphicsPixmapItem *item12Ptr;
-  QGraphicsPixmapItem *item13Ptr;
-  QGraphicsPixmapItem *item14Ptr;
-  QGraphicsPixmapItem *item15Ptr;
+  QGraphicsPixmapItem *playerCardPtr1;
+  QGraphicsPixmapItem *playerCardPtr2; 
+  QGraphicsPixmapItem *cardBackgroundPtr1; 
+  QGraphicsPixmapItem *cardBackgroundPtr2;
+  QGraphicsPixmapItem *compCardPtr1;
+  QGraphicsPixmapItem *compCardPtr2;
+  QGraphicsPixmapItem *flopPtr1;
+  QGraphicsPixmapItem *flopPtr2;
+  QGraphicsPixmapItem *flopPtr3;
+  QGraphicsPixmapItem *turnPtr;
+  QGraphicsPixmapItem *riverPtr;
+  QGraphicsPixmapItem *playerChipsPtr;
+  QGraphicsPixmapItem *compChipsPtr;
+  QGraphicsPixmapItem *potPtr;
   
 
   int smallChips;
@@ -79,4 +88,3 @@ class DiagramScene : public QGraphicsScene
 };
 
 #endif
-
