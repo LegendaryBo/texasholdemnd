@@ -85,15 +85,13 @@ void Window::update()
   char str[9];
   int x;
   x=scene->updateCall();
-  x=scene->AIChoice();
+  //x=scene->AIChoice();
   sprintf(str,"%d", x);
 
   lineEditUpdate->setText(str);
-  scene->update();
-  graphicsScene->update();
-  graphicsView->update();
-  if(scene->getCaseInt() == 0) scene->nextState ();
-  if(scene->getCaseInt() == 8) { scene->clearHand();scene->update(); scene->nextState(); }
+ // if(scene->getCaseInt() == 0) scene->nextState ();
+  if(scene->getCaseInt() == -1) scene->nextState ();
+  else if(scene->getCaseInt() == 8) scene->nextState();
 }
 
 void Window::info()
@@ -102,7 +100,11 @@ void Window::info()
    int AIbet = scene->Holdem.human.betamount;
    int AIchips = scene->Holdem.human.chips;
    int pot = potsize;
-   sprintf(str, "bet=%d,highbet=%d,pot=%d",AIbet,highbet,pot);
+   double humanrank = scene->Holdem.human.Rank();
+   double AIrank = scene->Holdem.AI.Rank();
+   int caseint = scene->getCaseInt();
+   char choice = scene->Holdem.AI.choice;
+   sprintf(str, "AI=%f,Human=%f,choice=%c",humanrank,AIrank,choice);
 
   lineEditInfo->setText(str);
   scene->update();
@@ -119,8 +121,6 @@ if(scene->Holdem.AI.choice != 'r' && scene->Holdem.AI.choice != 'b') {
   scene->update();
   graphicsScene->update();
   graphicsView->update();
-  if (scene->getCaseInt() % 2 == 1)
-  scene->nextState();
 }
 }
 
@@ -134,49 +134,34 @@ if(raiseamount > highbet) {
   scene->update();
   graphicsScene->update();
   graphicsView->update();
-  if (scene->getCaseInt() % 2 == 1)
-  scene->nextState();
 }// end check if raise is valid
 }// end check if available option
 }// end function
 
 void Window::call()
 {
-int currentcase = scene->getCaseInt();
 if(scene->Holdem.AI.choice == 'r' || scene->Holdem.AI.choice == 'b') {
   scene->call();
   scene->update();
   graphicsScene->update();
   graphicsView->update();
-  scene->setCaseInt(++currentcase); // maybe don't this
-  scene->nextState();
 }
 }
 
 void Window::fold()
 {
-if(scene->Holdem.AI.choice == 'r' || scene->Holdem.AI.choice == 'b') {
-  scene->fold();
-  scene->update();
-  //graphicsScene->update();
-  //graphicsView->update();
-  scene->Holdem.winner();
-  scene->clearHand();
-  scene->setCaseInt(0);
-  scene->nextState();
-
+  if(scene->Holdem.AI.choice != 'p')
+    {
+  scene->Holdem.human.choice='f';
+  graphicsScene->update();
+  graphicsView->update();
 }
 }
 
 void Window::check()
 {
-int currentcase = scene->getCaseInt();
 if (scene->Holdem.AI.choice != 'r' && scene->Holdem.AI.choice != 'b') {
   scene->check();
-  scene->update();
-  graphicsScene->update();
-  graphicsView->update();
-  scene->setCaseInt(++currentcase);
-  scene->nextState();
 }
 }
+
