@@ -1,5 +1,9 @@
+//window.h
+//Authors: Matt Brittan, Kevin Jacobs, Scott Aufderheide
+//Description in .cpp implementation
 #ifndef WINDOW_H
 #define WINDOW_H
+
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QPushButton>
@@ -8,8 +12,7 @@
 #include <QAction>
 #include "DiagramScene.h"
 
-//class DiagramScene;
-
+//Classes defined for use
 class QAction;
 class QListWidget;
 class QMenu;
@@ -20,15 +23,17 @@ class QGraphicsView;
 class QWidget;
 class QPixmap;
 class QGraphicsScene;
-//class DiagramScene;
+class QLabel;
 
 class Window : public QMainWindow
 {
   Q_OBJECT
     
     public:
+  
   Window();
   
+  //Slots used for actions connected to buttons
   private slots:
   
   void bet();
@@ -36,43 +41,54 @@ class Window : public QMainWindow
   void raise();
   void fold();
   void check();
-  void update();
-  void info();
+  void updateCompAction();
   
   private:
-  
-  
-  //Background
 
+  //A DiagramScene object is displayed as a QGraphicsScene through a QGraphicsView
   DiagramScene *scene;
   QGraphicsScene *graphicsScene;
   QGraphicsView *graphicsView;
   
+  //Functions that create buttons, actions, lineEdits
   void createActions();
-  void createButtons();                         
+  void createButtonsandEdits();                         
   void createDockWindows();
   void createLayout();
+
+  //Used to update text boxes for chip counts
+  void updatePot();
+  void updateCompChips();
+  void updateHumanChips();
   
+  //Declaration of buttons
   QPushButton *betButton;
   QPushButton *raiseButton;
   QPushButton *callButton;
   QPushButton *foldButton;
   QPushButton *checkButton;
-  QPushButton *updateButton;
-  QPushButton *infoButton;
+  QPushButton *compActionButton;
+
+  //QLabels used for displaying chip counts
+  QLabel *lineEditPlayer;
+  QLabel *lineEditComputer;
+  QLabel *lineEditHumanChips;
+  QLabel *lineEditCompChips;
+  QLabel *lineEditPotChips;
+  QLabel *lineEditHumanChipCount;
+  QLabel *lineEditCompChipCount;
+  QLabel *lineEditShowPot;
+
+  //Declaration of QLineEdits
   QLineEdit *lineEditBet;
   QLineEdit *lineEditRaise;
-  QLineEdit *lineEditCall;
-  QLineEdit *lineEditUpdate;
-  QLineEdit *lineEditInfo;
-  QFormLayout *layout;
+  QLineEdit *lineEditCompShow;
+  QLineEdit *lineEditBlank;
 
-  QAction *betAction;
-  QAction *callAction;
-  QAction *raiseAction;
-  QAction *foldAction;
-  QAction *checkAction;
+  //Form layout to lay out the dockWidget cleanly
+  QFormLayout *layout;
 };
 
 #endif
+
 
