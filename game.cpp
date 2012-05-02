@@ -33,9 +33,9 @@ game::newhand ()
   if (preflop ())
     if (flop ())
       if (turn ())
-	river ();
+    river ();
       else
-	winner ();
+    winner ();
     else
       winner ();
   else
@@ -49,23 +49,22 @@ game::reset ()
   potsize = 0;
   highbet = 0;
   community.clear ();
-  human.state = 'n';		// means they haven't made a move yet
-  AI.state = 'n';
+  human.choice = 'x';        // means they haven't made a move yet
+  AI.choice = 'x';
   human.betamount = 0;
   AI.betamount = 0;
   human.holecards.clear ();
   AI.holecards.clear ();
   Deck.shuffle ();
-  swap (position[0], position[1]);
 }
 
 void
 game::dealallcards ()
 {
 // Deal holecards
-  human.holecards.push_back (Deck.deal ());	// Deck.deal returns object of type Card
-  human.holecards.push_back (Deck.deal ());	// Can add a function to add card to holecards
-  AI.holecards.push_back (Deck.deal ());	// Could reference them as position[1],[2]
+  human.holecards.push_back (Deck.deal ());    // Deck.deal returns object of type Card
+  human.holecards.push_back (Deck.deal ());    // Can add a function to add card to holecards
+  AI.holecards.push_back (Deck.deal ());    // Could reference them as position[1],[2]
   AI.holecards.push_back (Deck.deal ());
 // Deal flop
   community.push_back (Deck.deal ());
@@ -75,6 +74,9 @@ game::dealallcards ()
   community.push_back (Deck.deal ());
 // Deal river
   community.push_back (Deck.deal ());
+
+human.rank = human.Rank();
+AI.rank = AI.Rank();
 }
 
 int
@@ -92,9 +94,9 @@ game::preflop ()
   while (position[turn]->state == 'r' || position[turn]->state == 'b')
     {
       if (turn == 1)
-	turn = 0;		// flip to other player
+    turn = 0;        // flip to other player
       else if (turn == 0)
-	turn = 1;
+    turn = 1;
       position[turn]->decision ();
 // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
     }
@@ -121,9 +123,9 @@ game::flop ()
   while (position[turn]->state == 'r' || position[turn]->state == 'b')
     {
       if (turn == 1)
-	turn = 0;		// flip to other player
+    turn = 0;        // flip to other player
       else if (turn == 0)
-	turn = 1;
+    turn = 1;
       position[turn]->decision ();
 // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
     }
@@ -150,9 +152,9 @@ game::turn ()
   while (position[turn]->state == 'r' || position[turn]->state == 'b')
     {
       if (turn == 1)
-	turn = 0;		// flip to other player
+    turn = 0;        // flip to other player
       else if (turn == 0)
-	turn = 1;
+    turn = 1;
       position[turn]->decision ();
 // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
     }
@@ -178,9 +180,9 @@ game::river ()
   while (position[turn]->state == 'r' || position[turn]->state == 'b')
     {
       if (turn == 1)
-	turn = 0;		// flip to other player
+    turn = 0;        // flip to other player
       else if (turn == 0)
-	turn = 1;
+    turn = 1;
       position[turn]->decision ();
 // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
     }
@@ -199,11 +201,13 @@ game::river ()
 void
 game::winner ()
 {
-  if (human.Rank () > AI.Rank ())
+if(AI.choice == 'f') human.chips += potsize;
+else if (human.choice == 'f') AI.chips += potsize;
+else if (human.Rank () > AI.Rank ())
     human.chips += potsize;
-  else if (AI.Rank () > human.Rank ())
+else if (AI.Rank () > human.Rank ())
     AI.chips += potsize;
-  else if (AI.Rank () == human.Rank ())
+else if (AI.Rank () == human.Rank ())
     {
       AI.chips += potsize / 2;
       human.chips += potsize / 2;
