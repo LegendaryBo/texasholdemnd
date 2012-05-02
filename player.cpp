@@ -1,12 +1,11 @@
 #include "player.h"
 
-
-player::player ()
+Player::Player ()
 {
-  chips = 100000;
+  chips = 1000;
 }
 
-player::~player ()
+Player::~Player ()
 {
   delete this;
 }
@@ -14,7 +13,7 @@ player::~player ()
 
 
 double
-player::Rank ()
+Player::Rank ()
 {
   rank = 0;
   //them from smallest to greatest in value // these are ordered in the findhigh function
@@ -54,7 +53,7 @@ player::Rank ()
 
 
 int
-player::bet (int bettotal)
+Player::bet (int bettotal)
 {
   if (bettotal > chips)
     betamount = chips;        // cant bet more than you have
@@ -65,13 +64,13 @@ player::bet (int bettotal)
 }
 
 int
-player::findhigh (int high)
+Player::findhigh (int high)
 {
   return combined[7 - high].value;
 }
 
 
-Card player::pair ()
+Card Player::pair ()
 {
   Card
   high (0);
@@ -135,7 +134,7 @@ Card player::pair ()
 }
 
 int
-player::twopair (Card pair)
+Player::twopair (Card pair)
 {
   double tempRank = 0;
   double fifthcard = 0;
@@ -171,7 +170,7 @@ player::twopair (Card pair)
 }
 
 int
-player::trips ()
+Player::trips ()
 {
   double tempRank = 0;
   Card high;
@@ -205,7 +204,7 @@ player::trips ()
 }
 
 int
-player::quads ()
+Player::quads ()
 {
   double tempRank = 0;
   Card high;
@@ -233,7 +232,7 @@ else fifthcard = findhigh(1);
 }
 
 int
-player::straight ()
+Player::straight ()
 {
   double tempRank = 0;
   int total = 1;
@@ -272,7 +271,7 @@ if(combined[i].value == 12) AcePresent = 1;
 }
 
 int
-player::flush ()
+Player::flush ()
 {
   double tempRank = 0;
   int total;
@@ -300,7 +299,7 @@ player::flush ()
 }
 
 int
-player::fullhouse (Card Pair)
+Player::fullhouse (Card Pair)
 {
   double tempRank = 0;
   if (twopair (Pair) && trips ())
@@ -311,3 +310,4 @@ player::fullhouse (Card Pair)
     rank = tempRank;
   return 1;
 }
+
