@@ -1,22 +1,34 @@
+//DiagramScene.cpp
+//Authors: Matt Brittan, Kevin Jacobs, Scott Aufderheide
+/*Description: This file runs/controls the display of the game through the
+object displayed in the main window. From here, all the chips are displayed, 
+cards are displayed, and hands are cleared. However, this also contains the main
+case statement to decide when to progress to the next hand (and display it) by
+reading the inputs/choices from the Game object included. This case statement
+lies within "nextState" and is shown/described below*/
+
 #include <QtGui>
 #include <QPixmap>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include "DiagramScene.h"
 
-using namespace std;
-
 DiagramScene::DiagramScene (QObject * parent):QGraphicsScene (parent)
 {
-  caseInt = -1;
-  drawBackground ();
+  caseInt = -1; //Initializes integer for case statement
+  drawBackground (); //Draws table
 
+  //Sets choice to welcome state for display purposes
+  Holdem.AI.choice='w';
+
+  //Initializes chip counts for display purposes
   smallChips = 100;
   smallMediumChips = 400;
   mediumLargeChips = 800;
   largeChips = 1200;
 }
 
+//Draws table background
 void
 DiagramScene::drawBackground ()
 {
@@ -25,12 +37,15 @@ DiagramScene::drawBackground ()
   graphicsScene->addPixmap (pixMapTable);
 }
 
+//returns the graphics scene which this inhabits 
+//used to draw in window
 QGraphicsScene *
 DiagramScene::getScene ()
 {
   return graphicsScene;
 }
 
+//function that holds case statement for gameplay decision
 void
 DiagramScene::nextState ()
 {
@@ -231,26 +246,29 @@ if (caseInt!=8) {
     }
 }
 
+//Used to update the amount player needs to bet to call AI's bet
 int
 DiagramScene::updateCall ()
 {
   return highbet;
 }
 
-
+//Used to set the game to a certain state in nextState
 void
 DiagramScene::setCaseInt (int newCase)
 {
   caseInt = newCase;
 }
 
+//Returns the int for the current case of the nextState decision making process
 int
 DiagramScene::getCaseInt ()
 {
   return caseInt;
 }
 
-
+//Used to update the players bet
+//Calls player bet() fcn which decreases chips and updates bet amount
 void
 DiagramScene::bet (int amount)
 {
@@ -260,6 +278,8 @@ DiagramScene::bet (int amount)
   displayChips ();
 }
 
+//Calls human raise function with specific value
+//Functions in essentially same way as bet
 void
 DiagramScene::raise (int amount)
 {
@@ -272,21 +292,24 @@ DiagramScene::raise (int amount)
   displayChips ();
 }
 
+//Simply sets human choice to check
 void
 DiagramScene::check ()
 {
   Holdem.human.choice = 'p';
 }
 
+//Calls the AI bet, sets human's choice to call
 void
 DiagramScene::call ()
 {
-  Holdem.human.bet (highbet);    // leave this
-  highbet = 0;            // leave this
-  Holdem.human.choice = 'c';    // leave this
-  displayChips ();        // leave this
+  Holdem.human.bet (highbet);    
+  highbet = 0;            
+  Holdem.human.choice = 'c';    
+  displayChips ();        
 }
 
+//Sets the nextState to 8, skips rest of hand
 void
 DiagramScene::fold ()
 {
@@ -294,57 +317,71 @@ DiagramScene::fold ()
   QCoreApplication::processEvents ();
 }
 
+//Deletes all images if they exist
+//resets pointers to null
 void
 DiagramScene::clearHand ()
 {
-  if (playerCardPtr1 != NULL){
-    delete playerCardPtr1;
-    playerCardPtr1=NULL;
-}
-  if (playerCardPtr2 != NULL){
-    delete playerCardPtr2;
-    playerCardPtr2=NULL;
-}
-  if (cardBackgroundPtr1 != NULL){
-    delete cardBackgroundPtr1;
-    cardBackgroundPtr1=NULL;
-}
-  if (cardBackgroundPtr2 != NULL){
-    delete cardBackgroundPtr2;
-    cardBackgroundPtr2=NULL;
-}
-  if (compCardPtr1 != NULL){
-    delete compCardPtr1;
-    compCardPtr1=NULL;
-}
-  if (compCardPtr2 != NULL){
-    delete compCardPtr2;
-    compCardPtr2=NULL;
-}
-  if (flopPtr1 != NULL){
-    delete flopPtr1;
-    flopPtr1=NULL;
-}
-  if (flopPtr2 != NULL){
-    delete flopPtr2;
-    flopPtr2=NULL;
-}
-  if (flopPtr3 != NULL){
-    delete flopPtr3;
-    flopPtr3=NULL;
-}
-  if (turnPtr != NULL){
-    delete turnPtr;
-    turnPtr=NULL;
-}
-  if (riverPtr != NULL){
-    delete riverPtr;
-    riverPtr=NULL;
-}
-  if (compChipsPtr != NULL){
-    delete potPtr;
-    potPtr=NULL;
-}
+  if (playerCardPtr1 != NULL)
+    {
+      delete playerCardPtr1;
+      playerCardPtr1=NULL;
+    }
+  if (playerCardPtr2 != NULL)
+    {
+      delete playerCardPtr2;
+      playerCardPtr2=NULL;
+    }
+  if (cardBackgroundPtr1 != NULL)
+    {
+      delete cardBackgroundPtr1;
+      cardBackgroundPtr1=NULL;
+    }
+  if (cardBackgroundPtr2 != NULL)
+    {
+      delete cardBackgroundPtr2;
+      cardBackgroundPtr2=NULL;
+    }
+  if (compCardPtr1 != NULL)
+    {
+      delete compCardPtr1;
+      compCardPtr1=NULL;
+    }
+  if (compCardPtr2 != NULL)
+    {
+      delete compCardPtr2;
+      compCardPtr2=NULL;
+    }
+  if (flopPtr1 != NULL)
+    {
+      delete flopPtr1;
+      flopPtr1=NULL;
+    }
+  if (flopPtr2 != NULL)
+    {
+      delete flopPtr2;
+      flopPtr2=NULL;
+    }
+  if (flopPtr3 != NULL)
+    {
+      delete flopPtr3;
+      flopPtr3=NULL;
+    }
+  if (turnPtr != NULL)
+    {
+      delete turnPtr;
+      turnPtr=NULL;
+    }
+  if (riverPtr != NULL)
+    {
+      delete riverPtr;
+      riverPtr=NULL;
+    }
+  if (compChipsPtr != NULL)
+    {
+      delete potPtr;
+      potPtr=NULL;
+    }
 }
 
 void
@@ -354,6 +391,7 @@ DiagramScene::dealInitialHand (const char *player1, const char *player2)
   dealComp ();
 }
 
+//Deals player two cards through using fileNames passed in
 void
 DiagramScene::dealPlayer (const char *player1, const char *player2)
 {
@@ -368,6 +406,7 @@ DiagramScene::dealPlayer (const char *player1, const char *player2)
   update ();
 }
 
+//Shows two card backgrounds for computer player
 void
 DiagramScene::dealComp ()
 {
@@ -383,6 +422,7 @@ DiagramScene::dealComp ()
   update ();
 }
 
+//Shows computer cards at end of the round
 void
 DiagramScene::showComp (const char *comp1, const char *comp2)
 {
@@ -400,7 +440,7 @@ DiagramScene::showComp (const char *comp1, const char *comp2)
   compCardPtr2->setPos (464, 10);
 }
 
-
+//Deals flop, functions in same way as above
 void
 DiagramScene::dealFlop (const char *flop1, const char *flop2,
             const char *flop3)
@@ -420,6 +460,7 @@ DiagramScene::dealFlop (const char *flop1, const char *flop2,
   update ();
 }
 
+//Deals turn, functions in same way as above
 void
 DiagramScene::dealTurn (const char *turn)
 {
@@ -431,6 +472,7 @@ DiagramScene::dealTurn (const char *turn)
   update ();
 }
 
+//Deals river, functions in same way as above
 void
 DiagramScene::dealRiver (const char *river)
 {
@@ -442,6 +484,7 @@ DiagramScene::dealRiver (const char *river)
   update ();
 }
 
+//Displays all chips (user, pot, comp)
 void
 DiagramScene::displayChips ()
 {
@@ -452,6 +495,8 @@ DiagramScene::displayChips ()
   update ();
 }
 
+//Displays human chips
+//Uses limits above to decide which image to show, of how many chips
 void
 DiagramScene::displayPlayerChips ()
 {
@@ -468,10 +513,9 @@ DiagramScene::displayPlayerChips ()
       playerChipsPtr = graphicsScene->addPixmap (pixMap);
       playerChipsPtr->setPos (321, 381);
     }
-  else if (playerChips < smallChips)    // error
+  else if (playerChips < smallChips) 
     {
       //display small chip size image
-
       QPixmap pixMap ("goldStack5.png");
       playerChipsPtr = graphicsScene->addPixmap (pixMap);
       playerChipsPtr->setPos (321, 381);
@@ -506,6 +550,7 @@ DiagramScene::displayPlayerChips ()
   update ();
 }
 
+//Shows computer chips, functions in same way as human chips
 void
 DiagramScene::displayCompChips ()
 {
@@ -531,7 +576,7 @@ DiagramScene::displayCompChips ()
     }
   else if (chips >= smallMediumChips && chips < mediumLargeChips)
     {
-      //MAKE ONE IMAGE
+     
       QPixmap pixMap ("goldStack3.png");
       compChipsPtr = graphicsScene->addPixmap (pixMap);
       compChipsPtr->setPos (618, 18);
@@ -544,7 +589,7 @@ DiagramScene::displayCompChips ()
     }
   else if (chips >= largeChips)
     {
-      //MAKE ONE IMAGE
+     
       QPixmap pixMap ("goldStack6.png");
       compChipsPtr = graphicsScene->addPixmap (pixMap);
       compChipsPtr->setPos (611, -4);
@@ -552,6 +597,7 @@ DiagramScene::displayCompChips ()
   update ();
 }
 
+//Shows pot chips, functions in same way as above
 void
 DiagramScene::displayPot ()
 {
@@ -561,7 +607,7 @@ DiagramScene::displayPot ()
 }
 
   int chips = potsize;
-  if (chips > 0 && chips < smallChips /*&& chips > 0 */ )    // possible error
+  if (chips > 0 && chips < smallChips)    
     {
       //display small chip size image
       QPixmap pixMap ("goldStack5.png");
@@ -578,7 +624,6 @@ DiagramScene::displayPot ()
     }
   else if (chips >= smallMediumChips && chips < mediumLargeChips)
     {
-      //MAKE ONE IMAGE
       QPixmap pixMap ("goldStack3.png");
       potPtr = graphicsScene->addPixmap (pixMap);
       potPtr->setPos (115, 165);
@@ -591,7 +636,6 @@ DiagramScene::displayPot ()
     }
   else if (chips >= largeChips)
     {
-      //MAKE ONE IMAGE
       QPixmap pixMap ("goldStack6.png");
       potPtr = graphicsScene->addPixmap (pixMap);
       potPtr->setPos (115, 165);
@@ -599,6 +643,7 @@ DiagramScene::displayPot ()
   update ();
 }
 
+//Returns an int for AI's choice
 int
 DiagramScene::AIChoice ()
 {
@@ -626,3 +671,4 @@ DiagramScene::AIChoice ()
     }
   return x;
 }
+
