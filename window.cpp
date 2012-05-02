@@ -100,11 +100,13 @@ void Window::info()
    int AIbet = scene->Holdem.human.betamount;
    int AIchips = scene->Holdem.human.chips;
    int pot = potsize;
-   double humanrank = scene->Holdem.human.Rank();
-   double AIrank = scene->Holdem.AI.Rank();
+   double humanrank = scene->Holdem.human.rank;
+   double AIrank = scene->Holdem.AI.rank;
+   int humancard = scene->Holdem.human.findhigh(3);
+   int AIcard = scene->Holdem.AI.findhigh(3);
    int caseint = scene->getCaseInt();
    char choice = scene->Holdem.AI.choice;
-   sprintf(str, "AI=%f,Human=%f,choice=%c",humanrank,AIrank,choice);
+   sprintf(str, "AI=%f,human=%f,choice=%c",AIrank,humanrank,choice);
 
   lineEditInfo->setText(str);
   scene->update();
