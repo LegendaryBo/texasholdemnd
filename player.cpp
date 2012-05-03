@@ -1,8 +1,11 @@
+// Kevin Jacobs, Matt Brittan, Scott Aufderheide
+// player.cpp
+// this file contains a bet function and all other functions are called from rank() which deals with the strength of the player's hand
 #include "player.h"
 
 Player::Player ()
 {
-  chips = 1000;
+  chips = 1000; // initialize number of chips for each player
 }
 
 Player::~Player ()
@@ -11,17 +14,19 @@ Player::~Player ()
 }
 
 
-
+// assigns a rank from ~0.030201 (very low cards) to 8(straight flush)
+// for example a pair of 5's with an 8, 7, and queen would be 1.05120807
+// two pair would be 2.(5th best card) and so on 
 double
 Player::Rank ()
 {
   rank = 0;
-  //them from smallest to greatest in value // these are ordered in the findhigh function
+  //takes all cards (player + community) and orders them from smallest to greatest in value
   for (int i = 0; i < 5; i++)
     combined.push_back (community[i]);
   for (int i = 0; i < 2; i++)
     combined.push_back (holecards[i]);
-// sort:
+// sort cards:
   int j;
   Card temp (0);
   for (int i = 0; i < 7; i++)
@@ -35,34 +40,35 @@ Player::Rank ()
       j--;
     }
     }
-  Card Pair = pair ();
-  if (Pair.value != -1)
+  Card Pair = pair ();  // check for pair
+  if (Pair.value != -1) // if there is a pair, check for other possibilities
     {
       twopair (Pair);
       trips ();
       quads ();
       fullhouse (Pair);
     }
-  straight ();
+  straight ();  
   flush ();
   if (straight () && flush ())
-  rank = 8;
+  rank = 8; 
   combined.clear ();
-  return rank;
+  return rank; // each function checks if the rank assigned by that function is greater than the previous rank and if it is, the new rank value is assigneed
 }
 
-
+// this function checks to make sure player's bet is valid and moves bet from his stack to the pot
 int
 Player::bet (int bettotal)
 {
   if (bettotal > chips)
-    betamount = chips;        // cant bet more than you have
+    bettotal = chips;        // cant bet more than you have
   betamount = bettotal;
   chips -= betamount;
   potsize += betamount;
   return chips;
 }
 
+// returns the value of the nth best card
 int
 Player::findhigh (int high)
 {
@@ -83,11 +89,14 @@ Card Player::pair ()
     fifthCard = 0;
   double
     tempRank = 0;
+
+// go through deque of player's available cards and see if 2 adjacent cards are equal
   for (int i = 0; i < 6; i++)
     {
       if (combined[i].value == combined[i + 1].value)
     high = combined[i];
     }
+// if pair is found, find the best 3 cards that aren't included in the pair
   if (high.value != -1)
     {
       if (findhigh (1) == high.value)
@@ -133,6 +142,7 @@ Card Player::pair ()
   return high;
 }
 
+// find a 2nd pair that is different from the first pair found (Pair)
 int
 Player::twopair (Card pair)
 {
@@ -169,6 +179,7 @@ Player::twopair (Card pair)
   return 1;
 }
 
+// looks for 3 adjacent cards to be equal
 int
 Player::trips ()
 {
@@ -187,6 +198,7 @@ Player::trips ()
     }
   if (high.value == -1)
     return 0;
+// if trips are found, find 2 next best cards
   else
     {
       for (int i = 1; i < 6; i++)
@@ -203,6 +215,7 @@ Player::trips ()
     }
 }
 
+// looks for 4 adjacent cards to be equal
 int
 Player::quads ()
 {
@@ -231,6 +244,7 @@ else fifthcard = findhigh(1);
   return 1;
 }
 
+// looks for 5 cards that are within 1 of eachother
 int
 Player::straight ()
 {
@@ -250,6 +264,7 @@ if(combined[i].value == 12) AcePresent = 1;
       total++;
       high = combined[i + 1];
     }
+// this is so that A2345 is recognized as a straight
       else if (combined[i].value == 3 && AcePresent && (combined[i-1].value == 2 || combined[i-1].value == 3)) {
       total++;
       high.value = 12;
@@ -259,6 +274,7 @@ if(combined[i].value == 12) AcePresent = 1;
     total = 1;
       else if (total > 4 && combined[i].value != combined[i+1].value) break;
     }    
+
   if (total > 4)
     tempRank = 4 + double (high.value) / 100;
   else
@@ -270,6 +286,7 @@ if(combined[i].value == 12) AcePresent = 1;
 
 }
 
+// check if there are 5 cars of same suit
 int
 Player::flush ()
 {
@@ -298,6 +315,7 @@ Player::flush ()
   return 1;
 }
 
+// if there is 2 pair and trips, must be full house
 int
 Player::fullhouse (Card Pair)
 {
@@ -310,4 +328,3 @@ Player::fullhouse (Card Pair)
     rank = tempRank;
   return 1;
 }
-
