@@ -1,0 +1,177 @@
+Matt Brittan, Kevin Jacobs, Scott Aufderheide
+Report of Meetings
+
+
+2/20/2012
+Meeting Time: 7:30
+Meeting Place: Stanford Hall Basement
+Present: All
+
+This meeting was the first meeting held. It involved brief introductions for Kevin and Scott, who didn’t know each other, and then discussion about development of classes. We decided to focus on working on just a single player’s functions, as we figured we could expand the game from this alone. We decided to build classes Card, Deck, and Player—where Player checked the outcome of a specific player’s hand. 
+
+From here, it was decided that Scott would work on the Card class. Kevin worked on the Player class, while Matt researched QT as well as beginning work on the Deck class. 
+
+
+Questions: If no computer player is made, how is privacy supposed to be kept between opposing players with not seeing each other’s cards?
+
+
+3/6/2012
+Meeting Time: 7
+Meeting Place: 206 Debart
+Present: All
+
+This meeting was held to mainly discuss graphics. We discussed what we would like to be drawn, as well as what graphics library we were going to use to support these drawings. We believe that we will use QT, and Matt will be downloading QT creator over break to attempt to animate some of the objects. 
+
+We also talked about our progress in the production of classes. The classes are coming along, but some of the functions in player (especially checking straights) are harder than they seemed. Therefore, these are not completely finished. However, we have made progress on the classes. 
+
+From here, each person will continue to work on developing his classes described from last meeting. However, Matt’s main focus will be focusing on the graphics, while Scott and Kevin slowly take over developing the other classes.
+
+
+Questions: Do QT/Glut have built-in alphabet and card-database?
+
+3/25/2012
+Meeting Time: 7:30
+Meeting Place: Second floor table, DeBart
+Present: Matt, Scott
+
+This meeting was held to discuss what had been accomplished over break. Matt showed Scott the SVN that he had set up over break, along with showing him some code that had been completed (for graphics). Scott discussed the classes that he had been developing, and I (Matt) encouraged him to upload these ASAP to the SVN. Kevin was not present.
+
+From here, we discussed beginning and implementing a Game class, essentially to run the game. We decided that this would now be Kevin’s main focus, while Scott continued to fix a few bugs within the other classes. Matt was decided to fully be devoted to graphics.
+ 
+
+Questions for future: How do player/card classes really fit together? Composition, but how to use?
+
+3/29/2012
+Meeting Time: 8:30
+Meeting Place: Basement of Stanford
+Present: Matt, Scott
+
+This meeting was short and essentially called to display the final outcome of Matt’s lab 8 (as it was a card table with cards that applied directly to the lab). Some animation was discussed, but this meeting was called mainly for graphics. 
+
+The same tasks were continued as assigned above. No new developments were really made in the past three or four days.
+
+
+Questions: None particularly. 
+
+
+
+
+
+
+
+
+
+
+
+
+4/2/2012
+Meeting Time: 8:00
+Meeting Place: DeBartolo
+Present: All
+
+This meeting was to show the final images (minus buttons) and what each looks like. Also, functions were discussed and what to be passed was discussed as well, in order to display graphics. The Game class was shown—as it was coming about—by Kevin, and we discussed merging all the classes together.
+
+From here, Kevin is going to finish up the Game class, and he and Scott will merge all classes together. Matt is going to make the final graphics, and begin to merge that with the Game object that will be held within the graphics programs.
+
+Questions: None.
+
+4/10/2012
+Meeting Time: 7:30
+Meeting Place: Computer Lab
+Present: All
+
+This was called to finish up the hand and deck cards. Also, this was done to implement a vector named fileNames where the file names of images were called. Then a function was implemented to call (randomly) one of these names for the card, basically like dealing a fileName to each card. No new tasks were really assigned; everyone continued to work as they were before.
+
+
+4/19/2012
+Meeting Time: 8:00
+Meeting Place: DeBart
+Present: All
+
+A meeting was called in order to make a case structure that decided what to be shown in PaintEvent. This was implemented with the playerHand and dealing functions. However, we needed to change the display more than PaintEvent allows. In this way, Matt will research ways to get more functionality out of QT. 
+
+Questions: Way other than PaintEvent to draw, one that provides more functionality?
+
+
+
+
+
+
+4/20/2012
+Meeting Time: 4:00 (pm)
+Meeting Place: 303 Fitzpatrick
+Present: Matt, Kevin
+
+This meeting was called so Matt could show Scott and Kevin the method he found to include player interaction while also displaying many more hands/functionality of deleting images. This was done through implementing a QMainWindow in a window.h/.cpp which held a DiagramScene, a class which inherited from a QGraphicsScene. At this point, all other classes were complete, and everything simply needed to be merged together.
+
+Matt was assigned to work on the merging of the Game and graphics, while Kevin worked on a large case statement that would control which state the program was in—one that would define which images were shown as well as when the AI would make a move. Scott was told to make 100% sure that Player, Card, CardDeck were all perfectly implemented, so all errors would be known to come from Game and graphic-less tested functions.
+
+Questios: None.
+
+4/22/2012
+Meeting Time: 7:30
+Meeting Place: Fitzpatrick
+Present: All
+
+This meeting was called to test the case statement, check out how Matt had changed the Game, and overall see where the project was. At this point, the game was functioning well, but AI’s choices were being made at weird places. Since these choices updated the case structure, this was causing large errors. In this way, we knew we had to update the AI’s choices and integrate them better. Kevin and Matt were put in charge of this. Scott was told to begin looking at the presentation (which was that coming Wednesday).
+
+Questions: None
+
+
+
+
+
+
+
+
+
+
+
+4/24/2012
+Meeting Time: 8:00
+Meeting Place: Second floor, DeBart
+Present: All
+
+This meeting was held simply to craft the presentation, which took about an hour. Matt made most of the slides about the graphics, Kevin made most about the implementation and uses of C++ (STL, saying we used graphics, etc.) while Scott made the UML diagram. No new assignments were made for coding the program.
+
+4/26/2012
+Meeting Time: 5:50 
+Meeting Place: 303 FitzPatrick
+Present: Matt and Kevin
+
+This was once again called to merge the almost finished Game object, graphics and the case statement. It was all extremely close to being done, with only a few segfaults being displayed, and we assume this was from the pointers. Only a few certain hands/specific clicks caused these segfaults. We knew we were close to being done, and Kevin and Matt continued to work on merging the graphics, case statement and Game. Scott helped with one of these two. 
+
+Questions: None, actually almost done.
+
+4/28/2012
+Meeting Time: 2:20
+Meeting Place: 303 FitzPatrick
+Present: Matt and Kevin
+
+This was called for the same reason that the past few coding sessions/meetings had been called for: clean up the case statement/Game object. After this was done, only the fold() function was broken, and though  we’re a little unsure why, everything else works. The only issue is closing the window and getting a segfault. From here, Kevin and Matt will work on the fixing of fold() and the segfault, while Scott will begin the report.
+
+Questions: None!
+
+
+
+
+
+
+
+
+
+4/30/2012
+Meeting Time: 8:00
+Meeting Place: 303 FitzPatrick
+Present: All
+
+This was a quick meeting that fixed that segfaults of fold() (turned out to be an issue with graphics pointers), and also called to discuss the report to aid Scott. From here, Kevin and Matt are going to clean up the code, comment the code, and make the display look professional, while Scott continues to work on finishing up the report. 
+
+Questions: None
+
+5/1/2012
+Meeting Time: 7:00
+Meeting Place: 303 FitzPatrick
+Present: All
+
+This was called to make the final preparations to the report, images and other objects to make everything finalized to be turned in. Everything is essentially completed finished, with only some trimming/commenting need to be made tomorrow to fully complete the project. 
