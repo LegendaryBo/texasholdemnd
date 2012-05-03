@@ -1,100 +1,74 @@
-//DiagramScene.h
-//Authors: Matt Brittan, Kevin Jacobs, Scott Aufderheide
-//Description in .cpp implementation
-
-#ifndef DIAGRAMSCENE_H
-#define DIAGRAMSCENE_H
-
-#include <QGraphicsScene>
-#include <QObject>
+// Kevin Jacobs, Matt Brittan, Scott Aufderheide
+// game.cpp
+// includes basic game functions that deal with the cards on board and determining the hand winner
+// also resets basic variables between hands
 #include "game.h"
 
-//Classes included for definitions
-class QGraphicsScene;
-class QGraphicsSceneMouseEvent;
-class QMenu;
-class QPointF;
-class QGraphicsLineItem;
-class QFont;
-class QGraphicsTextItem;
-class QColor;
-class QPixMap;
-class QGraphicsPixmapItem;
-
-//Extends QGraphicsScene for functionality
-class DiagramScene : public QGraphicsScene
+Game::Game ()
 {
-  Q_OBJECT
-    
-    public:
-  
-  DiagramScene(QObject *parent=0);
-  QGraphicsScene* getScene();
-  void clearHand(); //Clears all pics on board by deleting their pointers
-  void drawBackground(); //Draws table
-  void setCaseInt(int); //Sets int for case function in nextState
-  int getCaseInt(); //Returns int for case function in nextState
-  
-  //All cards dealt through fileNames
-  void dealInitialHand(const char *, const char *); //Deals two initial cards
-  void dealPlayer(const char *, const char *); //Deals two cards to player
-  void dealComp(); //Shows two backgrounds
-  void dealFlop(const char *, const char *, const char *); //Deals three cards
-  void dealTurn(const char*);
-  void dealRiver(const char *);
-  void showComp(const char *, const char *);
-  
-  //Where major case decision making is done
-  void nextState();
+  position.push_back (&AI); // position vector keeps track of players' posiition
+  position.push_back (&human);
+  bigblind = 10;
+}
 
-  //Functions that display image for amount of chips
-  void displayChips();
-  void displayPlayerChips();
-  void displayCompChips();
-  void displayPot();
+Game::~Game ()
+{
+  delete this;
+}
 
-  void fold();
-  void bet(int);
-  void raise(int);
-  void call();
-  void check();
-  
-  int updateCall(); //Returns amount of bet to help player call amount
-  int AIChoice(); //Returns choice AI made
-   
-  Game Holdem; //Instance of Game to play hold 'em
-  
- private:
+// clears basic variables including each players cards and shuffling deck
+void
+Game::reset ()
+{
+  potsize = 0;
+  highbet = 0;
+  community.clear ();
+  human.choice = 'x'; // means they haven't made a move yet
+  AI.choice = 'x';
+  human.betamount = 0;
+  AI.betamount = 0;
+  human.holecards.clear ();
+  AI.holecards.clear ();
+  Deck.shuffle ();
+}
 
-  int caseInt;
-  QGraphicsScene *graphicsScene;
+// Deals all cards on table... they're just not visible yet
+void
+Game::dealallcards ()
+{
+// Deal holecards
+  human.holecards.push_back (Deck.deal ());    // Deck.deal returns object of type Card
+  human.holecards.push_back (Deck.deal ());    // Can add a function to add card to holecards
+  AI.holecards.push_back (Deck.deal ());    // Could reference them as position[1],[2]
+  AI.holecards.push_back (Deck.deal ());
+  // Deal flop
+  community.push_back (Deck.deal ());
+  community.push_back (Deck.deal ());
+  community.push_back (Deck.deal ());
+  // Deal turn
+  community.push_back (Deck.deal ());
+  // Deal river
+  community.push_back (Deck.deal ());
   
-  QPixmap *pixMap;
+  human.rank = human.Rank();
+  AI.rank = AI.Rank();
+}
+
+// simply sees which player has highest rank, gives winner(s) chips
+void
+Game::winner ()
+{
+  if(AI.choice == 'f') human.chips += potsize;
+else if (human.choice == 'f') AI.chips += potsize;
+ else if (human.Rank () > AI.Rank ())
+   human.chips += potsize;
+ else if (AI.Rank () > human.Rank ())
+   AI.chips += potsize;
+ else if (AI.Rank () == human.Rank ())  // case of tie
+   {
+     AI.chips += potsize / 2;
+     human.chips += potsize / 2;
+   }
   
-  //Pointers to images created
-  QGraphicsPixmapItem *playerCardPtr1;
-  QGraphicsPixmapItem *playerCardPtr2; 
-  QGraphicsPixmapItem *cardBackgroundPtr1; 
-  QGraphicsPixmapItem *cardBackgroundPtr2;
-  QGraphicsPixmapItem *compCardPtr1;
-  QGraphicsPixmapItem *compCardPtr2;
-  QGraphicsPixmapItem *flopPtr1;
-  QGraphicsPixmapItem *flopPtr2;
-  QGraphicsPixmapItem *flopPtr3;
-  QGraphicsPixmapItem *turnPtr;
-  QGraphicsPixmapItem *riverPtr;
-  QGraphicsPixmapItem *playerChipsPtr;
-  QGraphicsPixmapItem *compChipsPtr;
-  QGraphicsPixmapItem *potPtr;
-  
-  //Cutoffs for chips image
-  int smallChips;
-  int smallMediumChips;
-  int mediumLargeChips;
-  int largeChips;
-};
-
-#endif
-
-
+}
 
