@@ -55,6 +55,7 @@ class Window : public QMainWindow
   void createButtonsandEdits();                         
   void createDockWindows();
   void createLayout();
+  void closeEvent(QCloseEvent *event);
 
   //Used to update text boxes for chip counts
   void updatePot();
@@ -90,5 +91,4 @@ class Window : public QMainWindow
 };
 
 #endif
-
 
