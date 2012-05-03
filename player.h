@@ -1,3 +1,8 @@
+// Kevin Jacobs, Matt Brittan, Scott Aufderheide
+// player.h 
+// contains all variables relevant to each player, as well has the rank of his hand
+// computer and human derive from this base class and use polymorphism because they use the decision function differently. The human's decision is actually decided mostly in the actual game
+
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -22,15 +27,15 @@ class Player
   Player ();
   ~Player ();
   double Rank (); // rank function that takes player cards and community cards 
-  string name;
+  string name; // name of player
   virtual void decision () = 0;    // different decision processes for human vs computer
   int bet (int); // number of chips out on the table for the given Round of 
-  int chips;
+  int chips; // player's chips
   char state; // stores last decision for Round, 'n' if they haven't acted
   int betamount; // get from button or computer
-  deque < Card > holecards;
-  double rank;
-  char choice;
+  deque < Card > holecards; // players 2 cards
+  double rank; // rank of hand
+  char choice; // players last choice
   int findhigh (int); // returns the 1st,2nd,... highest card 
 
 private:
@@ -96,12 +101,15 @@ class Computer:public Player
   }
   char AImove (char option)    // either (r,c,f) or (b,p,0)
   {
+// generate random number from 1 to 100
     srand (time (NULL));
     int number = rand () % 100;
-    rank = Rank();
+// find strength of hand
+    rank = Rank();\
+// vary choice/betamount based on available options (call/raise/fold vs check/bet) and strength of hand
     if (option == 'r')
       {
-    if (rank < 1.1)
+    if (rank < 1.1)   // small hand
       {
         if (number < 25)
           choice = 'c';
@@ -113,7 +121,7 @@ class Computer:public Player
         else
           choice = 'f';
       }
-    else if (rank < 3)
+    else if (rank < 3)  // medium hand
       {
         if (number < 75)
         {
@@ -122,7 +130,7 @@ class Computer:public Player
           else
             choice = 'c';
         }
-        else
+        else      
           {
         choice = 'r';
         if (.8 * chips < highbet)
@@ -131,7 +139,7 @@ class Computer:public Player
           betamount = 2 * highbet;
           }
       }
-    else
+    else            // big hand
       {
         if (number < 50 && Round != 4)
           choice = 'c';
@@ -150,7 +158,7 @@ class Computer:public Player
     
     else if (option == 'b')
       {
-    if (rank < 1.1)
+    if (rank < 1.1)     // small hand
       {
         if (number < 20)
           {
@@ -165,7 +173,7 @@ class Computer:public Player
         else
           choice = 'p';
       }
-    else if (rank < 3)
+    else if (rank < 3)    // medium hand
       {
         if (number < 35)
           {
@@ -179,7 +187,7 @@ class Computer:public Player
         else
           choice = 'p';
       }
-    else
+    else            // big hand
       {
         if (number < 35 && Round != 4)
           choice = 'p';
@@ -205,9 +213,10 @@ class Computer:public Player
     
   }                // end AImove()
   
-  
+  // decision finds AI's decision and then acts upon it
   void decision ()
   {
+// find choice
     if (highbet > 0)
       {
     choice = AImove ('r');
@@ -218,7 +227,7 @@ class Computer:public Player
       }
 
     state = choice;
-    
+// make apporopriate actions based off of choice
     switch (choice)
     {
     case 'b':
@@ -246,7 +255,6 @@ class Computer:public Player
   }
   
   
-};   // end class  deque < Card > holecards; // card class
+}; 
 
 #endif
-
