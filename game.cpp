@@ -1,8 +1,12 @@
+// Kevin Jacobs, Matt Brittan, Scott Aufderheide
+// game.cpp
+// includes basic game functions that deal with the cards on board and determining the hand winner
+// also resets basic variables between hands
 #include "game.h"
 
 Game::Game ()
 {
-  position.push_back (&AI);
+  position.push_back (&AI); // position vector keeps track of players' posiition
   position.push_back (&human);
   bigblind = 10;
 }
@@ -12,37 +16,7 @@ Game::~Game ()
   delete this;
 }
 
-// runs newhand until user wants to stop or game is over
-void
-Game::rungame ()
-{
-  play = 1;
-  
-  while (play == 1 && human.chips > 0 && AI.chips > 0)
-    {
-      newhand ();
-    }
-  
-}
-
-void
-Game::newhand ()
-{
-  reset ();
-  dealallcards ();
-  if (preflop ())
-    if (flop ())
-      if (turn ())
-    river ();
-      else
-    winner ();
-    else
-      winner ();
-  else
-    winner ();
-  
-}
-
+// clears basic variables including each players cards and shuffling deck
 void
 Game::reset ()
 {
@@ -58,6 +32,7 @@ Game::reset ()
   Deck.shuffle ();
 }
 
+// Deals all cards on table... they're just not visible yet
 void
 Game::dealallcards ()
 {
@@ -79,124 +54,6 @@ Game::dealallcards ()
   AI.rank = AI.Rank();
 }
 
-int
-Game::preflop ()
-{
-  Round = 0;
-  position[0]->bet (bigblind);
-  position[1]->bet (bigblind);
-  
-// Round of betting, skipping two players who posted blinds and asking them last
-  position[0]->decision ();
-  position[1]->decision ();
-  
-  int turn = 1;
-  while (position[turn]->state == 'r' || position[turn]->state == 'b')
-    {
-      if (turn == 1)
-    turn = 0;        // flip to other player
-      else if (turn == 0)
-    turn = 1;
-      position[turn]->decision ();
-      // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
-    }
-  
-  // check if only one player is left
-  if (human.state == 'f' || AI.state == 'f')
-    return 0;
-  else
-    return 1;
-}
-
-
-int
-Game::flop ()
-{
-  Round = 1;
-  // display (2);
-  
-  // Round of betting, skipping two players who posted blinds and asking them last
-  position[0]->decision ();
-  position[1]->decision ();
-  
-  int turn = 1;
-  while (position[turn]->state == 'r' || position[turn]->state == 'b')
-    {
-      if (turn == 1)
-    turn = 0;        // flip to other player
-      else if (turn == 0)
-    turn = 1;
-      position[turn]->decision ();
-      // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
-    }
-  
-  // check if only one player is left
-  if (human.state == 'f' || AI.state == 'f')
-    return 0;
-  else
-    return 1;
-}
-
-
-int
-Game::turn ()
-{
-  Round = 2;
-  //  display (3);d
-  
-  // Round of betting, skipping two players who posted blinds and asking them last
-  position[0]->decision ();
-  position[1]->decision ();
-  
-  int turn = 1;
-  while (position[turn]->state == 'r' || position[turn]->state == 'b')
-    {
-      if (turn == 1)
-    turn = 0;        // flip to other player
-      else if (turn == 0)
-    turn = 1;
-      position[turn]->decision ();
-      // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
-    }
-  
-  // check if only one player is left
-  if (human.state == 'f' || AI.state == 'f')
-    return 0;
-  else
-    return 1;
-}
-
-int
-Game::river ()
-{
-  Round = 3;
-//  display (4);
-  
-// Round of betting, skipping two players who posted blinds and asking them last
-  position[0]->decision ();
-  position[1]->decision ();
-  
-  int turn = 1;
-  while (position[turn]->state == 'r' || position[turn]->state == 'b')
-    {
-      if (turn == 1)
-    turn = 0;        // flip to other player
-      else if (turn == 0)
-    turn = 1;
-      position[turn]->decision ();
-      // check if all in and other person calls, if calls all in ... if so see next cards and break out of loop , could do this in if statement below
-    }
-  
-// check if only one player is left
-  if (human.state == 'f' || AI.state == 'f')
-    return 0;
-  else
-    return 1;
-  
-}
-
-
-
 // simply sees which player has highest rank, gives winner(s) chips
 void
 Game::winner ()
@@ -207,12 +64,11 @@ else if (human.choice == 'f') AI.chips += potsize;
    human.chips += potsize;
  else if (AI.Rank () > human.Rank ())
    AI.chips += potsize;
- else if (AI.Rank () == human.Rank ())
+ else if (AI.Rank () == human.Rank ())  // case of tie
    {
      AI.chips += potsize / 2;
      human.chips += potsize / 2;
    }
   
 }
-
 
