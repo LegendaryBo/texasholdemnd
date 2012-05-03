@@ -1,0 +1,123 @@
+Matt Brittan, Kevin Jacobs, Scott Aufderheide
+Time Log
+
+
+Time reported to Matt Brittan and stored here
+
+Scott
+•	2/23/12—1 hour
+  o	Worked on Card class
+  •	Developed functions decided in meeting
+•	3/4/12—2 hours
+  o	Further Developed Card
+  o	Got code ready to present in meeting
+•	3/10-3/17 (Spring Break)—8 hours
+  o	Essentially completed card class
+  o	Worked on functions in Deck class
+•	3/25/2012—1 Hour
+  o	Attempted to figure out how to adapt Card and Deck classes to really work with Player class 
+•	4/10-4/18—3 Hours
+  o	Finished adapting two classes
+  •	Began work on adapting to graphics
+•	4/19—1 Hour
+  o	Spoke with Kevin about merging all classes
+•	4/21—2 Hours
+  o	Worked on player.h/.cpp, Card.h, CardDeck.h and .cpp in order to ensure all working properly with each other
+•	4/23—1 Hour
+  o	Worked on presentation
+•	4/27—1 Hour
+  o	Worked on project report
+•	4/28—2 Hours
+  o	Fixed minor error in Card class
+•	4/30—2 Hours
+  o	Worked on report
+•	5/1—1 Hour
+  o	Worked with Matt and Kevin to finish up report
+
+
+
+
+
+
+
+
+
+
+Matt
+•	2/26/12—30 minutes
+  o	Worked on deck class
+  •	Developed functions and vector of cards
+•	3/2/12—1 hour
+  o	Worked on private helper functions for Deck
+•	3/5/12—30 minutes
+  o	Prepared code for meeting
+•	3/10-3/17—2 Hours
+  o	Worked on QT
+  •	Downloaded QT Creator/SDK
+  •	Attempted to work with QT functions
+•	3/20/12—2 Hours
+  o	Began work on lab 8
+  •	Lab for making background and cards for project
+•	3/26/12—6 Hours
+  o	Finished lab 8
+•	3/31-4/5—10 Hours
+  o	QT…
+•	4/10—5 Hours
+  o	Finished all graphics except for buttons
+•	4/12 and 4/13—2 Hours
+  o	Worked on case statement for display
+•	4/19—12 Hours
+  o	Reconfigured entire method of graphic display (check report for details)
+•	4/21—3 Hours
+  o	Worked on the Game function, fixing small errors to work with the graphics
+•	4/22—2.5 Hours
+  o	Worked with Kevin on integrating Game, the case statement, and the graphics display
+•	4/26—4 Hours
+  o	Continued work with Kevin on integration
+•	4/28—1 Hour
+  o	Worked on cleaning graphics as well as fixing segfaults with graphics’ pointers
+•	4/29—4 Hours
+  o	Finished up project working with Kevin
+•	5/1—4 Hours
+  o	Commented, polished graphics
+
+
+
+
+
+Kevin
+•	2/29/12—1 hour
+  o	Celebrated Leap Day while coding
+  o	Worked on Player class
+  •	Didn’t work on the checkOutcome functions
+•	3/2/12—1 hour
+  o	Worked on many of the checkOutcome functions
+  o	Figured out how hard straight is
+•	3/10-3/17—4 Hours
+•	3/25—2 Hours
+  o	Worked on Player Class and Game Class
+•	4/1-4/6—6 Hours 
+  o	Adapted Player Class to work with graphics
+  o	Worked on Game class
+•	4/10—2 Hour
+  o	Essentially completed Game class
+•	4/12—2 Hours
+  o	Helped Matt (with ideas) for graphics
+•	4/19—1 Hour
+  o	Worked with Scott about merging all classes
+•	4/20—8 Hours
+  o	Worked on making the case statement for the graphics display
+•	4/21—2 Hours
+  o	Continued worked on the case statement
+•	4/22—4 Hours
+  o	Worked with Matt on integrating the case statement, Game object and graphics
+•	4/23—4 Hours
+  o	Continued work on the case statement
+•	4/26—3 Hours
+  o	Worked with Matt on merging the Game and case statement
+  •	Almost finished with this process
+•	4/28-4/29—6 Hours
+  o	Worked with Matt on same thing as above, as well as fixing fold()
+  •	Tried to remove segfaults
+•	5/1—46Hours
+  o	Finished up, polished up, commented
