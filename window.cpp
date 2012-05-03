@@ -161,7 +161,15 @@ void Window::updateCompAction()
   char str[60];
   int AIbet = scene->Holdem.AI.betamount;
   char choice = scene->Holdem.AI.choice;
+
   
+  updatePot();
+  updateCompChips();
+  updateHumanChips();
+  
+if(scene->Holdem.AI.chips <=0) { choice = 'h'; scene->setCaseInt(20); }
+else if (scene->Holdem.human.chips <=0) { choice = 'a'; scene->setCaseInt(20); } 
+
   //Decides what to display in computer move text box
   if (choice=='b') sprintf(str, "Computer bets %d", AIbet);
   else if (choice =='f') sprintf(str, "Computer folds!");
@@ -169,11 +177,11 @@ void Window::updateCompAction()
   else if (choice == 'r') sprintf(str, "Computer raises %d", AIbet);
   else if (choice == 'c') sprintf(str, "Computer calls");
   else if (choice == 'w') sprintf(str, "Welcome to the game! Click again!");
-  
+  else if (choice == 'h') sprintf(str, "You win! Game over");
+  else if (choice == 'a') sprintf(str, "AI wins! Game over");
+
+  if (scene->getCaseInt() == -1) potsize = 0;
   updatePot();
-  updateCompChips();
-  updateHumanChips();
-  
   lineEditCompShow->setText(str);
   scene->update();
   graphicsScene->update();
@@ -285,4 +293,10 @@ void Window::check()
   }
 }
 
+void Window::closeEvent(QCloseEvent *event)
+{
+  delete graphicsScene;
+  delete graphicsView;
+  delete this;    
+}
 
