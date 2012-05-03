@@ -15,11 +15,11 @@ lies within "nextState" and is shown/described below*/
 
 DiagramScene::DiagramScene (QObject * parent):QGraphicsScene (parent)
 {
-  caseInt = -1; //Initializes integer for case statement
-  drawBackground (); //Draws table
+  caseInt = -1;            //Initializes integer for case statement
+  drawBackground ();        //Draws table
 
   //Sets choice to welcome state for display purposes
-  Holdem.AI.choice='w';
+  Holdem.AI.choice = 'w';
 
   //Initializes chip counts for display purposes
   smallChips = 100;
@@ -46,6 +46,7 @@ DiagramScene::getScene ()
 }
 
 //function that holds case statement for gameplay decision
+// Goes in cases of 2, even case: predictable events, odd case: continues until player folds/calls/checks
 void
 DiagramScene::nextState ()
 {
@@ -55,51 +56,89 @@ DiagramScene::nextState ()
     case -1:
       caseInt = 0;
     case 0:
-      clearHand();
-      Round = 1;
-      Holdem.reset ();
-      Holdem.dealallcards ();
-      dealInitialHand (Holdem.human.holecards[0].cardname,
+      clearHand (); // clear cards from last hand
+      Round = 1; // AI uses this to gage how much to bet
+      Holdem.reset (); // reset bets,cards...
+      Holdem.dealallcards (); // this deals all the actual cards out, will be displayed later
+      dealInitialHand (Holdem.human.holecards[0].cardname,  // makes human cards visible
                Holdem.human.holecards[1].cardname);
-      Holdem.AI.choice = 'x';
+      Holdem.AI.choice = 'x';  // at the beginning of each round, choices are reset
       Holdem.human.choice = 'x';
-      Holdem.AI.betamount = 0;
+      Holdem.AI.betamount = 0;  // bet amount is also reset
       Holdem.human.betamount = 0;
-      Holdem.AI.decision ();    // update buttons
+      Holdem.AI.decision ();    // computers move
       displayChips ();
-      caseInt = 1;        // needs to go before human choice because computer button would restart case if caseInt==0.
-      while (Holdem.human.choice == 'x')
+      caseInt = 1;
+      while (Holdem.human.choice == 'x')   // wait until human makes a move
     QCoreApplication::processEvents ();
-      if (Holdem.human.choice == 'f')
+      if (Holdem.human.choice == 'f')    // if either player folds or is all in, go to end
     fold ();
       else if (Holdem.AI.choice == 'f')
     fold ();
-// check if fold
-if (caseInt!=8) {
-    case 1:
-      turn = 'a';
-      while (Holdem.human.choice != 'c' && Holdem.AI.choice != 'c'
-         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p') && Holdem.human.choice != 'f'
-         && Holdem.AI.choice != 'f')
+      else if ((Holdem.human.choice == 'b' || Holdem.human.choice == 'r')
+           && (highbet >= Holdem.AI.chips || highbet >= Holdem.human.chips))
     {
-      if (turn == 'h')
+      Holdem.AI.decision ();
+      if (Holdem.AI.choice == 'c' || Holdem.AI.choice == 'r')
+        {
+          dealFlop (community[0].cardname, community[1].cardname,
+            community[2].cardname);
+          dealTurn (community[3].cardname);
+          dealRiver (community[4].cardname);
+          displayChips ();
+        }
+      caseInt = 8;
+    }
+// check if fold
+      if (caseInt != 8)
+    {
+    case 1:
+      turn = 'a'; // continue until all in/call/fold
+      while (Holdem.human.choice != 'c' && Holdem.AI.choice != 'c'
+         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')
+         && Holdem.human.choice != 'f' && Holdem.AI.choice != 'f')
+        {
+          if (turn == 'h')  // humans turn
         {
           Holdem.human.choice = 'x';
           while (Holdem.human.choice == 'x')
-        QCoreApplication::processEvents ();
-          turn = 'a';
+            QCoreApplication::processEvents ();
+          turn = 'a'; // change turns
         }
-      else if (turn == 'a')
+          else if (turn == 'a') // ai's turn
         {
-          Holdem.AI.decision ();
-              if(Holdem.AI.choice == 'f') fold();
-          displayChips ();
-          turn = 'h';
+          if ((Holdem.human.choice == 'b'
+               || Holdem.human.choice == 'r')
+              && highbet >= Holdem.AI.chips)
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'c') // if all in, show remaining cards, go to end
+            {
+              dealFlop (community[0].cardname,
+                    community[1].cardname,
+                    community[2].cardname);
+              dealTurn (community[3].cardname);
+              dealRiver (community[4].cardname);
+              displayChips ();
+            }
+              caseInt = 8;
+            }        // end check if all in
+          else
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'f')
+            fold ();
+              displayChips ();
+              turn = 'h'; // change turns
+            }        // end else
           QCoreApplication::processEvents ();
-        }
+        }        // end turn = 'a'
+        }            // end while
     }
-}
-if (caseInt!=8) {
+
+// each of the following cases is nearly identical to previous cases
+      if (caseInt != 8)
+    {
       caseInt = 2;
     case 2:
       Round = 2;
@@ -109,43 +148,73 @@ if (caseInt!=8) {
       Holdem.AI.betamount = 0;
       Holdem.human.betamount = 0;
       dealFlop (community[0].cardname, community[1].cardname,
-        community[2].cardname);
+            community[2].cardname);
       Holdem.AI.decision ();
       displayChips ();
       while (Holdem.human.choice == 'x')
-    QCoreApplication::processEvents ();
+        QCoreApplication::processEvents ();
       if (Holdem.human.choice == 'f')
-    fold ();
+        fold ();
       else if (Holdem.AI.choice == 'f')
-    fold ();
+        fold ();
+      else if ((Holdem.human.choice == 'b' || Holdem.human.choice == 'r')
+           && highbet >= Holdem.AI.chips)
+        {
+          Holdem.AI.decision ();
+          if (Holdem.AI.choice == 'c')
+        {
+          dealTurn (community[3].cardname);
+          dealRiver (community[4].cardname);
+        }
+          caseInt = 8;
+        }
       else
-    caseInt++;
-}
-if (caseInt!=8) {
+        caseInt++;
+    }
+      if (caseInt != 8)
+    {
     case 3:
       turn = 'a';
       while (Holdem.human.choice != 'c' && Holdem.AI.choice != 'c'
-         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p') && Holdem.human.choice != 'f'
-         && Holdem.AI.choice != 'f')
-    {
-      if (turn == 'h')
+         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')
+         && Holdem.human.choice != 'f' && Holdem.AI.choice != 'f')
+        {
+          if (turn == 'h')
         {
           Holdem.human.choice = 'x';
           while (Holdem.human.choice == 'x')
-        QCoreApplication::processEvents ();
+            QCoreApplication::processEvents ();
           turn = 'a';
         }
-      else if (turn == 'a')
+          else if (turn == 'a')
         {
-          Holdem.AI.decision ();
-              if(Holdem.AI.choice == 'f') fold();
-          displayChips ();
-          turn = 'h';
-          QCoreApplication::processEvents ();
+          if ((Holdem.human.choice == 'b'
+               || Holdem.human.choice == 'r')
+              && highbet >= Holdem.AI.chips)
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'c')
+            {
+              dealTurn (community[3].cardname);
+              dealRiver (community[4].cardname);
+              displayChips ();
+            }
+              caseInt = 8;
+            }        // end check if all in
+          else
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'f')
+            fold ();
+              displayChips ();
+              turn = 'h';
+              QCoreApplication::processEvents ();
+            }
+        }
         }
     }
-}
-if (caseInt!=8) {
+      if (caseInt != 8)
+    {
       caseInt++;
     case 4:
       Round = 3;
@@ -158,39 +227,68 @@ if (caseInt!=8) {
       Holdem.AI.decision ();
       displayChips ();
       while (Holdem.human.choice == 'x')
-    QCoreApplication::processEvents ();
+        QCoreApplication::processEvents ();
       if (Holdem.human.choice == 'f')
-    fold ();
+        fold ();
       else if (Holdem.AI.choice == 'f')
-    fold ();
+        fold ();
+      else if ((Holdem.human.choice == 'b' || Holdem.human.choice == 'r')
+           && highbet >= Holdem.AI.chips)
+        {
+          Holdem.AI.decision ();
+          dealRiver (community[4].cardname);
+          caseInt = 8;
+        }
       else
-    caseInt++;
-}
-if (caseInt!=8) {
+        caseInt++;
+    }
+      if (caseInt != 8)
+    {
     case 5:
       turn = 'a';
       while (Holdem.human.choice != 'c' && Holdem.AI.choice != 'c'
-         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')&& Holdem.human.choice != 'f'
-         && Holdem.AI.choice != 'f')
-    {
-      if (turn == 'h')
+         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')
+         && Holdem.human.choice != 'f' && Holdem.AI.choice != 'f')
+        {
+          if (turn == 'h')
         {
           Holdem.human.choice = 'x';
           while (Holdem.human.choice == 'x')
-        QCoreApplication::processEvents ();
+            QCoreApplication::processEvents ();
           turn = 'a';
         }
-      else if (turn == 'a')
+          else if (turn == 'a')
         {
-          Holdem.AI.decision ();
-          if(Holdem.AI.choice == 'f') fold();
-          displayChips ();
-          turn = 'h';
-          QCoreApplication::processEvents ();
+          if ((Holdem.human.choice == 'b'
+               || Holdem.human.choice == 'r')
+              && highbet >= Holdem.AI.chips)
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'c')
+            {
+              dealFlop (community[0].cardname,
+                    community[1].cardname,
+                    community[2].cardname);
+              dealTurn (community[3].cardname);
+              dealRiver (community[4].cardname);
+              displayChips ();
+            }
+              caseInt = 8;
+            }        // end check if all in
+          else
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'f')
+            fold ();
+              displayChips ();
+              turn = 'h';
+              QCoreApplication::processEvents ();
+            }
+        }
         }
     }
-}
-if (caseInt!=8) {
+      if (caseInt != 8)
+    {
       caseInt++;
     case 6:
       Round = 4;
@@ -203,45 +301,72 @@ if (caseInt!=8) {
       Holdem.AI.decision ();
       displayChips ();
       while (Holdem.human.choice == 'x')
-    QCoreApplication::processEvents ();
+        QCoreApplication::processEvents ();
       if (Holdem.human.choice == 'f')
-    fold ();
+        fold ();
       else if (Holdem.AI.choice == 'f')
-    fold ();
+        fold ();
+      else if ((Holdem.human.choice == 'b' || Holdem.human.choice == 'r')
+           && highbet >= Holdem.AI.chips)
+        {
+          Holdem.AI.decision ();
+          caseInt = 8;
+        }
       else
-    caseInt++;
-}
-if (caseInt!=8) {
+        caseInt++;
+    }
+      if (caseInt != 8)
+    {
     case 7:
       turn = 'a';
       while (Holdem.human.choice != 'c' && Holdem.AI.choice != 'c'
-         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')&& Holdem.human.choice != 'f'
-         && Holdem.AI.choice != 'f')
-    {
-      if (turn == 'h')
+         && !(Holdem.human.choice == 'p' && Holdem.AI.choice == 'p')
+         && Holdem.human.choice != 'f' && Holdem.AI.choice != 'f')
+        {
+          if (turn == 'h')
         {
           Holdem.human.choice = 'x';
           while (Holdem.human.choice == 'x')
-        QCoreApplication::processEvents ();
+            QCoreApplication::processEvents ();
           turn = 'a';
         }
-      else if (turn == 'a')
+          else if (turn == 'a')
         {
-          Holdem.AI.decision ();
-          if(Holdem.AI.choice == 'f') fold();
-          displayChips ();
-          turn = 'h';
-          QCoreApplication::processEvents ();
+          if ((Holdem.human.choice == 'b'
+               || Holdem.human.choice == 'r')
+              && highbet >= Holdem.AI.chips)
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'c')
+            {
+              dealFlop (community[0].cardname,
+                    community[1].cardname,
+                    community[2].cardname);
+              dealTurn (community[3].cardname);
+              dealRiver (community[4].cardname);
+              displayChips ();
+            }
+              caseInt = 8;
+            }        // end check if all in
+          else
+            {
+              Holdem.AI.decision ();
+              if (Holdem.AI.choice == 'f')
+            fold ();
+              displayChips ();
+              turn = 'h';
+              QCoreApplication::processEvents ();
+            }
         }
-    }
+        }
       caseInt++;
-}
+    }
     case 8:
       showComp (Holdem.AI.holecards[0].cardname,
-        Holdem.AI.holecards[1].cardname);  
-      Holdem.winner();
+        Holdem.AI.holecards[1].cardname);
+      Holdem.winner (); // decide winner
       Holdem.human.choice = 'x';
-      caseInt = -1;
+      caseInt = -1;  // reset case
       break;
     }
 }
@@ -272,8 +397,9 @@ DiagramScene::getCaseInt ()
 void
 DiagramScene::bet (int amount)
 {
-  highbet = amount;
+  if (amount > Holdem.AI.chips) amount = Holdem.AI.chips;
   Holdem.human.bet (amount);
+  highbet = amount;
   Holdem.human.choice = 'b';
   displayChips ();
 }
@@ -285,6 +411,8 @@ DiagramScene::raise (int amount)
 {
   if (amount > Holdem.human.chips)
     amount = Holdem.human.chips;
+  if (amount > Holdem.AI.chips)
+    amount = Holdem.AI.chips;
   int raiseamount = amount - highbet;
   highbet = raiseamount;
   Holdem.human.bet (amount);
@@ -303,10 +431,23 @@ DiagramScene::check ()
 void
 DiagramScene::call ()
 {
-  Holdem.human.bet (highbet);    
-  highbet = 0;            
-  Holdem.human.choice = 'c';    
-  displayChips ();        
+if(highbet > Holdem.human.chips) { 
+  highbet = Holdem.human.chips;
+  Holdem.human.bet (highbet);
+  highbet = 0;
+  Holdem.human.choice = 'c';
+      dealFlop (community[0].cardname, community[1].cardname,
+        community[2].cardname);
+      dealTurn (community[3].cardname);
+      dealRiver (community[4].cardname);
+      setCaseInt (8);
+    }
+else {
+  Holdem.human.bet (highbet);
+  highbet = 0;
+  Holdem.human.choice = 'c';
+}
+  displayChips ();
 }
 
 //Sets the nextState to 8, skips rest of hand
@@ -325,62 +466,62 @@ DiagramScene::clearHand ()
   if (playerCardPtr1 != NULL)
     {
       delete playerCardPtr1;
-      playerCardPtr1=NULL;
+      playerCardPtr1 = NULL;
     }
   if (playerCardPtr2 != NULL)
     {
       delete playerCardPtr2;
-      playerCardPtr2=NULL;
+      playerCardPtr2 = NULL;
     }
   if (cardBackgroundPtr1 != NULL)
     {
       delete cardBackgroundPtr1;
-      cardBackgroundPtr1=NULL;
+      cardBackgroundPtr1 = NULL;
     }
   if (cardBackgroundPtr2 != NULL)
     {
       delete cardBackgroundPtr2;
-      cardBackgroundPtr2=NULL;
+      cardBackgroundPtr2 = NULL;
     }
   if (compCardPtr1 != NULL)
     {
       delete compCardPtr1;
-      compCardPtr1=NULL;
+      compCardPtr1 = NULL;
     }
   if (compCardPtr2 != NULL)
     {
       delete compCardPtr2;
-      compCardPtr2=NULL;
+      compCardPtr2 = NULL;
     }
   if (flopPtr1 != NULL)
     {
       delete flopPtr1;
-      flopPtr1=NULL;
+      flopPtr1 = NULL;
     }
   if (flopPtr2 != NULL)
     {
       delete flopPtr2;
-      flopPtr2=NULL;
+      flopPtr2 = NULL;
     }
   if (flopPtr3 != NULL)
     {
       delete flopPtr3;
-      flopPtr3=NULL;
+      flopPtr3 = NULL;
     }
   if (turnPtr != NULL)
     {
       delete turnPtr;
-      turnPtr=NULL;
+      turnPtr = NULL;
     }
   if (riverPtr != NULL)
     {
       delete riverPtr;
-      riverPtr=NULL;
+      riverPtr = NULL;
     }
   if (compChipsPtr != NULL)
     {
       delete potPtr;
-      potPtr=NULL;
+      potPtr = NULL;
     }
 }
 
@@ -426,10 +567,10 @@ DiagramScene::dealComp ()
 void
 DiagramScene::showComp (const char *comp1, const char *comp2)
 {
- delete cardBackgroundPtr1;
- cardBackgroundPtr1=NULL;
- delete cardBackgroundPtr2;
- cardBackgroundPtr2=NULL;
+  delete cardBackgroundPtr1;
+  cardBackgroundPtr1 = NULL;
+  delete cardBackgroundPtr2;
+  cardBackgroundPtr2 = NULL;
 
   QPixmap pixMapOne (comp1);
   compCardPtr1 = graphicsScene->addPixmap (pixMapOne);
@@ -500,10 +641,11 @@ DiagramScene::displayChips ()
 void
 DiagramScene::displayPlayerChips ()
 {
-  if (playerChipsPtr != NULL){
-    delete playerChipsPtr;
-    playerChipsPtr=NULL;
-}
+  if (playerChipsPtr != NULL)
+    {
+      delete playerChipsPtr;
+      playerChipsPtr = NULL;
+    }
 
   int playerChips = Holdem.human.chips;
 
@@ -513,7 +655,7 @@ DiagramScene::displayPlayerChips ()
       playerChipsPtr = graphicsScene->addPixmap (pixMap);
       playerChipsPtr->setPos (321, 381);
     }
-  else if (playerChips < smallChips) 
+  else if (playerChips < smallChips)
     {
       //display small chip size image
       QPixmap pixMap ("goldStack5.png");
@@ -554,10 +696,11 @@ DiagramScene::displayPlayerChips ()
 void
 DiagramScene::displayCompChips ()
 {
-  if (compChipsPtr != NULL){
-    delete compChipsPtr;
-    compChipsPtr=NULL;
-}
+  if (compChipsPtr != NULL)
+    {
+      delete compChipsPtr;
+      compChipsPtr = NULL;
+    }
   int chips = Holdem.AI.chips;
   if (chips > 0 && chips < smallChips)
     {
@@ -576,7 +719,7 @@ DiagramScene::displayCompChips ()
     }
   else if (chips >= smallMediumChips && chips < mediumLargeChips)
     {
-     
+
       QPixmap pixMap ("goldStack3.png");
       compChipsPtr = graphicsScene->addPixmap (pixMap);
       compChipsPtr->setPos (618, 18);
@@ -589,7 +732,7 @@ DiagramScene::displayCompChips ()
     }
   else if (chips >= largeChips)
     {
-     
+
       QPixmap pixMap ("goldStack6.png");
       compChipsPtr = graphicsScene->addPixmap (pixMap);
       compChipsPtr->setPos (611, -4);
@@ -601,13 +744,14 @@ DiagramScene::displayCompChips ()
 void
 DiagramScene::displayPot ()
 {
-  if (potPtr != NULL){
-    delete potPtr;
-    potPtr=NULL;
-}
+  if (potPtr != NULL)
+    {
+      delete potPtr;
+      potPtr = NULL;
+    }
 
   int chips = potsize;
-  if (chips > 0 && chips < smallChips)    
+  if (chips > 0 && chips < smallChips)
     {
       //display small chip size image
       QPixmap pixMap ("goldStack5.png");
@@ -671,4 +815,3 @@ DiagramScene::AIChoice ()
     }
   return x;
 }
-
